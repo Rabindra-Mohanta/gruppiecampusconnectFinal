@@ -5,20 +5,31 @@
       <map>
         <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/activity_add_chapter_post.xml" value="0.17552083333333332" />
         <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/activity_add_post.xml" value="0.15677083333333333" />
+        <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/activity_add_staff.xml" value="0.17552083333333332" />
         <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/activity_add_subject2.xml" value="0.17552083333333332" />
         <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/activity_add_syllabus.xml" value="0.15989583333333332" />
+        <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/activity_create_profile.xml" value="0.17552083333333332" />
+        <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/activity_dashboard_new.xml" value="0.1" />
         <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/activity_fees_payment.xml" value="0.17552083333333332" />
         <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/activity_hw_post.xml" value="0.17552083333333332" />
+        <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/activity_nested_team.xml" value="0.17552083333333332" />
         <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/add_accountant_dialog.xml" value="0.17447916666666666" />
+        <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/app_bar_dashboard_new.xml" value="0.12" />
         <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/dialog_enter_chapter.xml" value="0.15989583333333332" />
         <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/dialog_enter_topic.xml" value="0.15989583333333332" />
         <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/dialog_select_class.xml" value="0.22" />
         <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/fragment_chapter_list.xml" value="0.17135416666666667" />
         <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/fragment_syllabus_list.xml" value="0.16018518518518518" />
         <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/item_add_topic.xml" value="0.15989583333333332" />
+        <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/item_class.xml" value="0.17552083333333332" />
+        <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/item_other_lead.xml" value="0.17552083333333332" />
+        <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/item_preschool_student.xml" value="0.17552083333333332" />
         <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/item_topic_post.xml" value="0.17552083333333332" />
         <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/layout_list_teams.xml" value="0.17552083333333332" />
+        <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/layout_list_without_refresh.xml" value="0.17552083333333332" />
         <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/layout_toolbar.xml" value="0.17552083333333332" />
+        <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/list_item_lead.xml" value="0.17552083333333332" />
+        <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/list_item_post.xml" value="0.11458333333333333" />
         <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/layout/single_attendance_subject.xml" value="0.1453125" />
         <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/menu/activity_dashboard_drawer.xml" value="0.15989583333333332" />
         <entry key="..\:/Users/mohan/AndroidStudioProjects/gruppiecampusconnectFinal/app/src/main/res/menu/activity_main.xml" value="0.15989583333333332" />

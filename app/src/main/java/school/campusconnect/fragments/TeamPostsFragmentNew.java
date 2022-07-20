@@ -1032,6 +1032,71 @@ public class TeamPostsFragmentNew extends BaseFragment implements LeafManager.On
                 }
             });*/
 
+            ((GroupDashboardActivityNew) getActivity()).tv_Desc.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    int members = 0;
+
+                    if (HomeTeamDataTBL.getTeamPost(team_id).size()>0)
+                    {
+                        List<HomeTeamDataTBL> homeTeamDataTBLList= HomeTeamDataTBL.getTeamPost(team_id);
+
+                        for (int i = 0;i<homeTeamDataTBLList.size();i++)
+                        {
+                            if (team_id.equalsIgnoreCase(homeTeamDataTBLList.get(i).teamId))
+                            {
+                                members = homeTeamDataTBLList.get(i).members;
+                            }
+                        }
+
+                    }
+
+                    if (isBoothClick != null && isBoothClick.equalsIgnoreCase("yes"))
+                    {
+                        Intent intent = new Intent(getContext(), CommitteeActivity.class);
+                        intent.putExtra("class_data",new Gson().toJson(teamData));
+                        intent.putExtra("title",teamData.name);
+                        intent.putExtra("team_count", members);
+                        intent.putExtra("isBoothClick","yes");
+                        startActivity(intent);
+                    }
+                    else
+                    {
+                        if (!teamData.isTeamAdmin && !teamData.allowTeamPostAll)
+                            return;
+
+                        if (teamData.category.equalsIgnoreCase("booth"))
+                        {
+                            Intent intent = new Intent(getContext(), CommitteeActivity.class);
+                            intent.putExtra("class_data",new Gson().toJson(teamData));
+                            intent.putExtra("title",teamData.name);
+                            intent.putExtra("team_count", members);
+                            intent.putExtra("isBoothClick","yes");
+                            startActivity(intent);
+                        }
+                        else {
+                            try {
+                                Intent intent = new Intent(getContext(), LeadsListActivity.class);
+                                intent.putExtra("id", mGroupId);
+                                intent.putExtra("apiCall", true);
+                                intent.putExtra("team_id", team_id);
+                                intent.putExtra("class_data",new Gson().toJson(teamData));
+                                intent.putExtra("team_name", teamName);
+                                intent.putExtra("team_count", members);
+                                intent.putExtra("isAdmin", teamData.isTeamAdmin);
+                                startActivity(intent);
+                                AppLog.e("Team id : ", team_id + "");
+                            }
+                            catch (Exception e) {
+                                AppLog.e("floating", "error is " + e.toString());
+                            }
+                        }
+                    }
+                }
+            });
+
+
             ((GroupDashboardActivityNew) getActivity()).tvToolbar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

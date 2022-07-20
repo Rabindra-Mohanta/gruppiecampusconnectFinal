@@ -10,6 +10,7 @@ import butterknife.OnClick;
 import school.campusconnect.databinding.ActivityVoterProfileBinding;
 import school.campusconnect.databinding.ItemOtherLeadBinding;
 import school.campusconnect.datamodel.booths.VoterProfileResponse;
+import school.campusconnect.fragments.LeadListFragment;
 import school.campusconnect.utils.AppLog;
 
 import android.text.TextUtils;
@@ -27,13 +28,16 @@ import android.widget.Toast;
 
 import com.activeandroid.ActiveAndroid;
 import com.amulyakhare.textdrawable.TextDrawable;
+import com.bumptech.glide.Glide;
 import com.clevertap.android.sdk.CleverTapAPI;
 import com.clevertap.android.sdk.exceptions.CleverTapMetaDataNotFoundException;
 import com.clevertap.android.sdk.exceptions.CleverTapPermissionsNotSatisfied;
 import com.google.gson.Gson;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
+import java.util.Random;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -45,6 +49,7 @@ import school.campusconnect.datamodel.LeadItem;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.Constants;
 import school.campusconnect.utils.ImageUtil;
+import school.campusconnect.utils.UploadCircleImageFragment;
 import school.campusconnect.views.SMBDialogUtils;
 
 public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAddUpdateListener, DialogInterface.OnClickListener, LeafManager.OnCommunicationListener {
@@ -52,6 +57,7 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
     public static final String TAG = "LeadDetailActivity";
     public static final String EXTRA_LEAD_ITEM = "extra_lead_item";
     private LeadItem mLeadItem;
+
   /*  @Bind(R.id.txt_name)
     TextView txtName;
     @Bind(R.id.txt_phone)
@@ -147,12 +153,13 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
     SharedPreferences prefs;
     LeafManager manager = new LeafManager();
     boolean isPost, isAdmin;
+    String imageUrl;
     String type;
     private String teamId;
     private boolean allowedToAddUser;
     private boolean allowedToAddTeamPost;
     private boolean allowedToAddTeamPostComment;
-
+    UploadCircleImageFragment imageFragment;
     String voterId,caste,sub_caste,religion,blood_group;
     ItemOtherLeadBinding binding;
 
@@ -201,6 +208,38 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
         binding.txtDob.setText(mLeadItem.getDob());
 
 
+        if (!TextUtils.isEmpty(mLeadItem.getImage()))
+        {
+            AppLog.e("LeadAdapter", "Item Not Empty +"+mLeadItem.getName()+" , "+mLeadItem.getImage());
+
+            Picasso.with(getApplicationContext()).load(Constants.decodeUrlToBase64(mLeadItem.getImage())).resize(dpToPx(), dpToPx()).
+                    into(binding.imageView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                            AppLog.e("LeadAdapter", "Item Not Empty , On Success ");
+                        }
+
+                        @Override
+                        public void onError() {
+                            AppLog.e("LeadAdapter", "Item Not Empty , On Error");
+
+                              binding.imageView.setVisibility(View.GONE);
+                              binding.imageByName.setVisibility(View.VISIBLE);
+                            TextDrawable drawable = TextDrawable.builder()
+                                    .buildRound(ImageUtil.getTextLetter(mLeadItem.getName()), ImageUtil.getRandomColor(0)) ;
+                            binding.imageByName.setImageDrawable(drawable);
+                        }
+                    });
+        } else {
+            AppLog.e("LeadAdapter", "Item Empty ");
+            binding.imageView.setVisibility(View.GONE);
+            binding.imageByName.setVisibility(View.VISIBLE);
+            TextDrawable drawable = TextDrawable.builder()
+                    .buildRound(ImageUtil.getTextLetter(mLeadItem.getName()), ImageUtil.getRandomColor(0 ));
+            binding.imageByName.setImageDrawable(drawable);
+        }
+
         binding.txtGender.setText(mLeadItem.gender);
         binding.txtLeadCount.setText(String.valueOf(mLeadItem.getLeadCount()));
 
@@ -241,6 +280,9 @@ public class LeadDetailActivity extends BaseActivity implements LeafManager.OnAd
         fillDetails(mLeadItem);
     }
 
+    private int dpToPx() {
+        return getResources().getDimensionPixelSize(R.dimen.profile_image_size);
+    }
 
 
     private void fillDetails(LeadItem data) {

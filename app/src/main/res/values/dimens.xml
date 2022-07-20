@@ -50,6 +50,7 @@
     <dimen name="header_height">135dp</dimen>
     <dimen name="header_text_padding">0dp</dimen>
     <dimen name="group_list_image_size">50dp</dimen>
+    <dimen name="profile_image_size">120dp</dimen>
 
     <dimen name="snackbar_textsize">14sp</dimen>
 

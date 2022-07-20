@@ -118,7 +118,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
 
     private static final String TAG = "LeadListFragment";
     private LayoutListWithoutRefreshBinding mBinding;
-    private LeadAdapter mAdapter;
+     LeadAdapter mAdapter;
     final int REQUEST_CALL = 234;
     Intent intent;
     LeadItem leadItem;
@@ -171,6 +171,7 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
 
         return mBinding.getRoot();
     }
+
 
     private void setListener() {
         mBinding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -592,6 +593,8 @@ public class LeadListFragment extends BaseFragment implements LeadAdapter.OnLead
             intent.putExtra("subCaste",item.subCaste);
             intent.putExtra("religion",item.religion);
             intent.putExtra("blood",item.bloodGroup);
+
+
 
             intent.putExtra("post", item.getIsPost());
             intent.putExtra("allowedToAddUser", item.allowedToAddUser);

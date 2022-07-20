@@ -107,13 +107,13 @@ android {
                             buildConfigField("String", "AppCategory", '"constituency"')
                             buildConfigField("String", "APP_ID",  '"constituency"')*/
 
-                        /*applicationId "kreis.gruppie"
-                        versionCode 3
-                        versionName "1.2"
-                        resValue "string", "app_name", '"KREIS"'
-                        buildConfigField("String", "AppName", '"KREIS"')
-                        buildConfigField("String", "AppCategory", '"CAMPUS"')
-                        buildConfigField("String", "APP_ID",  '"school"')*/
+//                        applicationId "kreis.gruppie"
+//                        versionCode 3
+//                        versionName "1.2"
+//                        resValue "string", "app_name", '"KREIS"'
+//                        buildConfigField("String", "AppName", '"KREIS"')
+//                        buildConfigField("String", "AppCategory", '"CAMPUS"')
+//                        buildConfigField("String", "APP_ID",  '"school"')
 
                         // [ 2. RPES :  Campus Copy]
                         /*   applicationId "rpes.campusconnect"
@@ -288,7 +288,7 @@ android {
 //            buildConfigField "String", "BASE_URL", '"https://gruppiecampus.gruppie.in"'
 //            buildConfigField "String", "BASE_URL", '"https://schools.gruppie.in"'
          //   buildConfigField "String", "BASE_URL", '"https://gcc4.gruppie.in"' // NPHPS,Akanksha,Gruppie campus,SRIGANDHA
-//            buildConfigField "String", "BASE_URL", '"https://gcc5.gruppie.in"' // KREIS
+            //  buildConfigField "String", "BASE_URL", '"https://gcc5.gruppie.in"' // KREIS
       //      buildConfigField "String", "BASE_URL", '"https://gcc3.gruppie.in"' // DODDAGOUDAR
            // buildConfigField "String", "BASE_URL", '"https://gcc2.gruppie.in"'  // VIDYANIKETAN, KTSV,St. Philomena's
         //    buildConfigField "String", "BASE_URL", '"https://gcc1.gruppie.in"'  // RPES, SHAHBAAZ

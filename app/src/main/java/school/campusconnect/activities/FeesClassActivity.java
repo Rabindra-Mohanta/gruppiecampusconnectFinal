@@ -30,14 +30,17 @@ import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.ClassListTBL;
 import school.campusconnect.datamodel.TeamCountTBL;
 import school.campusconnect.datamodel.classs.ClassResponse;
+import school.campusconnect.datamodel.staff.AddStaffRole;
+import school.campusconnect.datamodel.staff.StaffResponse;
 import school.campusconnect.datamodel.subjects.SubjectStaffResponse;
+import school.campusconnect.datamodel.syllabus.SyllabusListModelRes;
 import school.campusconnect.fragments.FeesClassListFragment;
 import school.campusconnect.fragments.PaidFeesFragment;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
 import school.campusconnect.utils.MixOperations;
 
-public class FeesClassActivity extends BaseActivity {
+public class FeesClassActivity extends BaseActivity implements LeafManager.OnCommunicationListener {
 
     @Bind(R.id.toolbar)
     public Toolbar mToolBar;
@@ -49,12 +52,16 @@ public class FeesClassActivity extends BaseActivity {
     @Bind(R.id.tabLayout)
     public TabLayout tabLayout;
 
-    ArrayList<ClassResponse.ClassData> result = new ArrayList<>();
+
+    private ArrayList<String> StaffIdList=new ArrayList<>();
+    ArrayList<StaffResponse.StaffData> result = new ArrayList<>();
+
     PaidFeesFragment paidFeesFragment;
     String role;
     private Menu menu;
     String selectedClassId="";
     private  Boolean isaccountant=false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +114,8 @@ public class FeesClassActivity extends BaseActivity {
 
                 }
             });
-            getDataLocally();
+           // getDataLocally();
+            apiCall(true);
         }else {
             tabLayout.setVisibility(View.GONE);
             FeesClassListFragment classListFragment=new FeesClassListFragment();
@@ -146,6 +154,7 @@ public class FeesClassActivity extends BaseActivity {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_select_class);
         Button btnSubmit = dialog.findViewById(R.id.btnSubmit);
+
         RecyclerView rvSubject = dialog.findViewById(R.id.rvSubjects);
         TextView title=dialog.findViewById(R.id.title);
         title.setText(getResources().getString(R.string.lbl_select_accountant));
@@ -158,29 +167,31 @@ public class FeesClassActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (!TextUtils.isEmpty(selectedClassId)) {
+
+                   callAccountantApi();
                     dialog.dismiss();
-                    paidFeesFragment.callApi(selectedClassId);
+
                 } else {
-                    Toast.makeText(FeesClassActivity.this, getResources().getString(R.string.lbl_select_class), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FeesClassActivity.this, getResources().getString(R.string.lbl_select_staff), Toast.LENGTH_SHORT).show();
                 }
             }
         });
-        dialog.findViewById(R.id.btnCancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                selectedClassId = "";
-                paidFeesFragment.callApi(selectedClassId);
-            }
-        });
+
         dialog.show();
     }
 
+
+    private void callAccountantApi() {
+
+        LeafManager leafManager=new LeafManager();
+        //leafManager.addSchoolStaffRole(this,GroupDashboardActivityNew.groupId,"accountant",addStaffRoles);
+    }
+
     public class AttendanceSubjectAdapter extends RecyclerView.Adapter<AttendanceSubjectAdapter.ViewHolder> {
-        private ArrayList<ClassResponse.ClassData> listSubject;
+        private ArrayList<StaffResponse.StaffData> listSubject;
         private Context mContext;
 
-        public AttendanceSubjectAdapter(ArrayList<ClassResponse.ClassData> listSubject) {
+        public AttendanceSubjectAdapter(ArrayList<StaffResponse.StaffData> listSubject) {
             this.listSubject = listSubject;
         }
 
@@ -193,12 +204,12 @@ public class FeesClassActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(final AttendanceSubjectAdapter.ViewHolder holder, final int position) {
-            ClassResponse.ClassData itemList = listSubject.get(position);
+            StaffResponse.StaffData itemList = listSubject.get(position);
             holder.tvName.setText(itemList.getName());
             holder.tvStaff.setVisibility(View.GONE);
-            if ((selectedClassId+"").equalsIgnoreCase(itemList.getId())) {
+            if(itemList.isSelected){
                 holder.chkAttendance.setChecked(true);
-            } else {
+            }else {
                 holder.chkAttendance.setChecked(false);
             }
         }
@@ -224,8 +235,20 @@ public class FeesClassActivity extends BaseActivity {
                 chkAttendance.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        selectedClassId = listSubject.get(getAdapterPosition()).getId();
-                        notifyDataSetChanged();
+
+                        chkAttendance.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                               listSubject.get(getAdapterPosition()).isSelected = chkAttendance.isChecked();
+
+
+
+                            }
+                        });
+
+
+
+
                     }
                 });
             }
@@ -234,53 +257,10 @@ public class FeesClassActivity extends BaseActivity {
     }
 
 
-    private void getDataLocally() {
-        List<ClassListTBL> list = ClassListTBL.getAll(GroupDashboardActivityNew.groupId);
-        if (list.size() != 0) {
-            result.clear();
-            for (int i = 0; i < list.size(); i++) {
-                ClassListTBL currentItem = list.get(i);
-                ClassResponse.ClassData item = new ClassResponse.ClassData();
-                item.id = currentItem.teamId;
-                item.teacherName = currentItem.teacherName;
-                item.phone = currentItem.phone;
-                item.members = currentItem.members;
-                item.countryCode = currentItem.countryCode;
-                item.className = currentItem.name;
-                item.classImage = currentItem.image;
-                item.category = currentItem.category;
-                item.jitsiToken = currentItem.jitsiToken;
-                item.userId = currentItem.userId;
-                item.rollNumber = currentItem.rollNumber;
-                result.add(item);
-            }
-
-            TeamCountTBL dashboardCount = TeamCountTBL.getByTypeAndGroup("ALL", GroupDashboardActivityNew.groupId);
-            if (dashboardCount != null) {
-                boolean apiCall = false;
-                if (dashboardCount.lastApiCalled != 0) {
-                    if (MixOperations.isNewEvent(dashboardCount.lastInsertedTeamTime, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", dashboardCount.lastApiCalled)) {
-                        apiCall = true;
-                    }
-                }
-                if (dashboardCount.oldCount != dashboardCount.count) {
-                    dashboardCount.oldCount = dashboardCount.count;
-                    dashboardCount.save();
-                    apiCall = true;
-                }
-
-                if (apiCall) {
-                    apiCall(false);
-                }
-            }
-        } else {
-            apiCall(true);
-        }
-    }
     private void apiCall(boolean isLoading) {
         LeafManager leafManager = new LeafManager();
 
-        leafManager.getClasses(this, GroupDashboardActivityNew.groupId);
+        leafManager.getStaff(this, GroupDashboardActivityNew.groupId);
     }
 
     @Override
@@ -299,8 +279,23 @@ public class FeesClassActivity extends BaseActivity {
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
         super.onSuccess(apiId, response);
-        ClassResponse res = (ClassResponse) response;
-        result = res.getData();
-        AppLog.e("FeesClassActivity", "ClassResponse " + result);
+
+        switch (apiId)
+
+        {
+
+            case  LeafManager.API_STAFF:
+
+                StaffResponse res = (StaffResponse) response;
+                result = res.getData();
+                AppLog.e("FeesClassActivity", "ClassResponse " + result);
+                     break;
+
+            case LeafManager.ADD_SCHOOL_ACCOUNTANT:
+
+                break;
+        }
+
+
     }
 }

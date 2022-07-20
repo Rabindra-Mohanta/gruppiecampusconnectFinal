@@ -55,6 +55,7 @@ import school.campusconnect.datamodel.profileCaste.ReligionResponse;
 import school.campusconnect.datamodel.profileCaste.SubCasteResponse;
 import school.campusconnect.datamodel.register.UniversitiesData;
 import school.campusconnect.datamodel.searchUser.SearchUserModel;
+import school.campusconnect.datamodel.staff.AddStaffRole;
 import school.campusconnect.datamodel.staff.ChangeStaffAttendanceReq;
 import school.campusconnect.datamodel.staff.StaffAttendanceRes;
 import school.campusconnect.datamodel.staff.TakeAttendanceReq;
@@ -406,6 +407,7 @@ public class LeafManager {
     public static final int API_STAFF_EDIT = 175;
     public static final int API_STAFF_DELETE = 176;
     public static final int API_STAFF_STUDENT_TEAM = 177;
+    public static final int ADD_SCHOOL_ACCOUNTANT =376;
     public static final int API_GET_PRESCHOOL_STUDENTS = 178;
     public static final int API_ATTENDANCE_PRESCHOOL_IN = 179;
     public static final int API_ATTENDANCE_PRESCHOOL_OUT = 180;
@@ -7499,6 +7501,52 @@ public class LeafManager {
             }
         }, ErrorResponse.class);
     }
+
+
+
+
+
+    public void addSchoolStaffRole(OnCommunicationListener listener, String groupId, String role, AddStaffRole addStaffRole) {
+        mOnCommunicationListener = listener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<BaseResponse> model = service.addSchoolStaffRole(groupId,role,addStaffRole);
+        ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
+
+        wrapper.execute(ADD_SCHOOL_ACCOUNTANT, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponse>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponse error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.message);
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, ErrorResponse.class);
+    }
+
+
+
+
+
+
+
+
+
+
+
     public void addTeamStaffOrStudent1(OnCommunicationListener listener, String groupId, String teamId,String role, String selectedUserIds,String teamid) {
         mOnCommunicationListener = listener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();

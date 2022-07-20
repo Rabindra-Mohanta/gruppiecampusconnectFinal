@@ -54,6 +54,7 @@ import school.campusconnect.datamodel.profileCaste.ReligionResponse;
 import school.campusconnect.datamodel.profileCaste.SubCasteResponse;
 import school.campusconnect.datamodel.register.UniversitiesData;
 import school.campusconnect.datamodel.searchUser.SearchUserModel;
+import school.campusconnect.datamodel.staff.AddStaffRole;
 import school.campusconnect.datamodel.staff.ChangeStaffAttendanceReq;
 import school.campusconnect.datamodel.staff.StaffAttendanceRes;
 import school.campusconnect.datamodel.staff.TakeAttendanceReq;
@@ -1227,6 +1228,13 @@ public interface LeafService {
     @POST("/api/v1/groups/{group_id}/team/{team_id}/school/user/add")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> addTeamStaffOrStudent(@Path("group_id") String group_id, @Path("team_id") String team_id, @Query("userId") String userIds,@Query("role") String role);
+
+
+  @POST("/api/v1/groups/{group_id}/school/staff/role/add")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> addSchoolStaffRole(@Path("group_id") String group_id, @Query("role") String role, @Body AddStaffRole addStaffRole);
+
+
 
     //copy
     @POST("/api/v1/groups/{group_id}/team/{team_id}/school/user/add")

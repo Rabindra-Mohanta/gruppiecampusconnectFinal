@@ -1,5 +1,6 @@
 package school.campusconnect.adapters;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -93,7 +94,7 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.ImageViewHolde
 
 
     @Override
-    public void onBindViewHolder(final ImageViewHolder holder, final int position) {
+    public void onBindViewHolder(final ImageViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         final LeadItem item = list.get(position);
 
         if (count != 0) {
