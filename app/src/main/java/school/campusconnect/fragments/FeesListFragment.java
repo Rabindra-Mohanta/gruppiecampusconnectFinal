@@ -75,6 +75,7 @@ public class FeesListFragment extends BaseFragment implements LeafManager.OnComm
 
     private String mGroupId;
     private String teamId;
+    private String user_id;
     private String role;
     private boolean accountant;
     private String className;
@@ -102,8 +103,8 @@ public class FeesListFragment extends BaseFragment implements LeafManager.OnComm
             teamId = getArguments().getString("team_id");
             role = getArguments().getString("role");
             accountant = getArguments().getBoolean("accountant");
-            Log.d(TAG,"accountant==>"+accountant);
             className = getArguments().getString("title");
+            user_id = getArguments().getString("user_id");
         }
 
     }
@@ -263,6 +264,7 @@ public class FeesListFragment extends BaseFragment implements LeafManager.OnComm
         Intent intent = new Intent(getActivity(), UpdateStudentFeesActivity.class);
         intent.putExtra("group_id", mGroupId);
         intent.putExtra("team_id", teamId);
+        intent.putExtra("user_id", user_id);
         intent.putExtra("title", studentData.studentName + " - (" + className + ")");
         intent.putExtra("role", role);
         intent.putExtra("accountant", accountant);

@@ -2,6 +2,7 @@ package school.campusconnect.activities;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -58,6 +59,7 @@ public class HWClassActivity extends BaseActivity {
     private Menu menu;
     AttendanceSubjectAdapter adapter;
     RecyclerView rvSubject;
+    Dialog dialog;
     ArrayList<StaffResponse.StaffData> result = new ArrayList<>();
 
     private StaffFragmentDialog staffFragmentDialog;
@@ -130,7 +132,7 @@ public class HWClassActivity extends BaseActivity {
 
 
     private void showClassSelectDialog() {
-        final Dialog dialog = new Dialog(this, R.style.FragmentDialog);
+         dialog = new Dialog(this, R.style.FragmentDialog);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_select_class);
         Button btnSubmit = dialog.findViewById(R.id.btnSubmit);
@@ -151,17 +153,10 @@ public class HWClassActivity extends BaseActivity {
                     Snackbar.make(dialog.getWindow().getDecorView(), "Please Select Examiner", Snackbar.LENGTH_LONG).show();
                    // Toast.makeText(dialog.getContext(),"Add Accountant",Toast.LENGTH_LONG).show();
                 }else{
-
-
-                    dialog.dismiss();
-
                     callAccountantApi();
+
                 }
-
-
-
-
-            }
+  }
         });
 
         dialog.show();
@@ -181,9 +176,11 @@ public class HWClassActivity extends BaseActivity {
 
             AppLog.e("TAG", "request :" + addStaffRoles);
             leafManager.addSchoolStaffRole(this, GroupDashboardActivityNew.groupId, "examiner", addStaffRoles);
+            // Toast.makeText(HWClassActivity.this, "Examiner added successfully", Toast.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(R.id.fragment_container), "Examiner added successfully", Snackbar.LENGTH_LONG).show();
 
+            dialog.dismiss();
         }
-        Toast.makeText(this, "Examiner added successfully", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -236,7 +233,6 @@ public class HWClassActivity extends BaseActivity {
 
         @Override
         public int getItemCount() {
-            Log.d("TAG","===>getItemCount--"+list.size());
             return list != null ? list.size() : 0;
         }
 

@@ -19,6 +19,7 @@ import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -61,6 +62,7 @@ public class FeesClassActivity extends BaseActivity implements LeafManager.OnCom
     AttendanceSubjectAdapter adapter;
     RecyclerView rvSubject;
     String role;
+    Dialog dialog;
     private Menu menu;
     String selectedClassId="";
     private  Boolean isaccountant=false;
@@ -152,7 +154,7 @@ public class FeesClassActivity extends BaseActivity implements LeafManager.OnCom
 
 
     private void showClassSelectDialog() {
-        final Dialog dialog = new Dialog(this, R.style.FragmentDialog);
+         dialog = new Dialog(this, R.style.FragmentDialog);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_select_class);
         Button btnSubmit = dialog.findViewById(R.id.btnSubmit);
@@ -170,11 +172,10 @@ public class FeesClassActivity extends BaseActivity implements LeafManager.OnCom
             public void onClick(View v) {
 
                 if (adapter.getSelectedList().isEmpty() || adapter.getItemCount()==0){
-
-                    Toast.makeText(dialog.getContext(),"Add Accountant",Toast.LENGTH_LONG).show();
+                    Snackbar.make(dialog.getWindow().getDecorView(), "Please Select Accountant", Snackbar.LENGTH_LONG).show();
                 }else{
                     callAccountantApi();
-                    dialog.dismiss();
+
                 }
 
 
@@ -200,7 +201,8 @@ public class FeesClassActivity extends BaseActivity implements LeafManager.OnCom
 
             AppLog.e("TAG", "request :" + addStaffRoles);
             leafManager.addSchoolStaffRole(this, GroupDashboardActivityNew.groupId, "accountant", addStaffRoles);
-
+            Snackbar.make(findViewById(R.id.fragment_container), "accountant added successfully", Snackbar.LENGTH_LONG).show();
+            dialog.dismiss();
         }
     }
 
@@ -254,7 +256,6 @@ public class FeesClassActivity extends BaseActivity implements LeafManager.OnCom
 
         @Override
         public int getItemCount() {
-            Log.d("TAG","===>getItemCount--"+list.size());
             return list != null ? list.size() : 0;
         }
 

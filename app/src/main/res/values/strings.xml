@@ -51,6 +51,13 @@
     <string name="hint_new_number">Enter new mobile</string>
     <string name="hint_confirm_number">Confirm new mobile</string>
     <string name="hint_gpay_paytm">G-Pay / Paytm</string>
+    <string name="hint_due_amount">Enter Due Amount</string>
+    <string name="hint_pay_amount">Enter Pay Amount</string>
+    <string name="hint_pay_date"> Pay Date</string>
+    <string name="hint_cheque_number">Enter Cheque Number</string>
+    <string name="hint_cheque_date"> Cheque Date</string>
+    <string name="hint_bank_name">Enter Bank Name</string>
+    <string name="hint_bank_branch">Enter Bank Branch</string>
     <string name="lbl_no_account">Don\'t have a group?</string>
     <string name="lbl_search_issue">Search Issue</string>
 
@@ -756,6 +763,14 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="lbl_pay">Pay</string>
     <string name="lbl_delete_test_paper">Delete Test Paper</string>
     <string name="lbl_paid_details">Paid Details</string>
+    <string name="lbl_due_amount">Due Amount : </string>
+    <string name="lbl_pay_amount">Pay Amount : </string>
+    <string name="lbl_pay_date">Pay Date : </string>
+    <string name="lbl_payment_mode">Payment Mode : </string>
+    <string name="lbl_cheque_number">Cheque Number : </string>
+    <string name="lbl_cheque_date">Cheque Date : </string>
+    <string name="lbl_bank_name">Bank Name : </string>
+    <string name="lbl_bank_branch">Bank Branch : </string>
     <string name="lbl_amount_paid">Amount Paid : </string>
     <string name="lbl_mode">MODE : </string>
     <string name="lbl_attachment">Attachment : </string>
@@ -1114,6 +1129,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="toast_add_one_subject_pdf">Please add at least one subject and pdf</string>
     <string name="toast_paid_amount_should_not_grater_than_amount">Paid amount should not grater than Amount Due</string>
     <string name="toast_please_add_attachment">Please Add Attachment</string>
+    <string name="toast_please_select_payment_mode">Please Select Payment Mode</string>
     <string name="toast_successfully_paid">Successfully Paid</string>
     <string name="toast_wrong_password">Wrong Password</string>
     <string name="toast_add_course_name">Please Add Course Name</string>

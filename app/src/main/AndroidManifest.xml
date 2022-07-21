@@ -58,6 +58,9 @@
         tools:overrideLibrary="us.zoom.videomeetings"
         tools:replace="android:allowBackup">
         <activity
+            android:name=".UpdateStudentFeePayActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.StaffAttendanceReport"
             android:exported="false" />
         <activity
@@ -492,6 +495,7 @@
         <activity android:name=".activities.TimeTabelActivity2" />
         <activity android:name=".activities.AddTimeTable2" />
         <activity android:name=".activities.ClassActivity" />
+        <activity android:name=".activities.UpdateStudentFeePayActivity" />
         <activity
             android:name=".activities.AddSubjectActivity"
             android:windowSoftInputMode="adjustResize" />
