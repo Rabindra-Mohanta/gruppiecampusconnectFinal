@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.UpdateStudentFeePayActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/topbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <include layout="@layout/layout_toolbar" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nested"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/topbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/padding_10dp"
+            android:layout_marginRight="@dimen/padding_10dp"
+            android:layout_marginBottom="@dimen/padding_10dp"
+            android:orientation="vertical">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/padding_5dp"
+                android:layout_marginTop="@dimen/padding_25dp"
+                android:layout_marginEnd="@dimen/padding_5dp"
+                android:layout_marginBottom="@dimen/padding_10dp"
+                android:background="@color/white"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="@dimen/padding_10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/padding_10dp"
+                        android:layout_marginTop="@dimen/padding_15dp"
+                        android:layout_marginEnd="@dimen/padding_10dp">
+
+                        <TextView
+                            style="@style/LabelNormal"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/padding_10dp"
+                            android:layout_weight="1"
+                            android:paddingLeft="@dimen/padding_10dp"
+                            android:text="@string/lbl_due_amount"
+                            android:textAllCaps="true"
+                            android:textColor="@color/colorPrimary" />
+
+                        <EditText
+                            android:id="@+id/etDueAmount"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/padding_10dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:editable="false"
+                            android:hint="@string/hint_due_amount"
+                            android:singleLine="true"
+                            android:textSize="@dimen/text_size_13sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/padding_10dp"
+                        android:layout_marginTop="@dimen/padding_15dp"
+                        android:layout_marginEnd="@dimen/padding_10dp">
+
+                        <TextView
+                            style="@style/LabelNormal"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/padding_10dp"
+                            android:layout_weight="1"
+                            android:paddingLeft="@dimen/padding_10dp"
+                            android:text="@string/lbl_pay_amount"
+                            android:textAllCaps="true"
+                            android:textColor="@color/colorPrimary" />
+
+                        <EditText
+                            android:id="@+id/etPayAmount"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/padding_10dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:hint="@string/hint_pay_amount"
+                            android:singleLine="true"
+                            android:textSize="@dimen/text_size_13sp" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/padding_10dp"
+                        android:layout_marginTop="@dimen/padding_15dp"
+                        android:layout_marginEnd="@dimen/padding_10dp">
+
+                        <TextView
+                            style="@style/LabelNormal"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/padding_10dp"
+                            android:layout_weight="1"
+                            android:paddingLeft="@dimen/padding_10dp"
+                            android:text="@string/lbl_pay_date"
+                            android:layout_gravity="center"
+                            android:textAllCaps="true"
+                            android:textColor="@color/colorPrimary" />
+
+                        <EditText
+                            android:id="@+id/etDate"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/padding_10dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:focusable="false"
+                            android:hint="@string/hint_pay_date"
+                            android:singleLine="true"
+                            android:textSize="@dimen/text_size_13sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/padding_10dp"
+                        android:layout_marginTop="@dimen/padding_15dp"
+                        android:layout_marginEnd="@dimen/padding_10dp">
+
+                        <TextView
+                            style="@style/LabelNormal"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/padding_10dp"
+                            android:paddingLeft="@dimen/padding_10dp"
+                            android:layout_weight="1"
+                            android:layout_gravity="center"
+                            android:text="@string/lbl_payment_mode"
+                            android:textAllCaps="true"
+                            android:textColor="@color/colorPrimary" />
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="@dimen/padding_10dp">
+                            <Spinner
+                                style="@style/commonSpinnerWhite"
+                                android:id="@+id/spMode"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/padding_30dp"
+                                />
+                            <ImageView
+                                android:layout_width="15dp"
+                                android:src="@drawable/arrow_down"
+                                app:tint="@color/colorPrimary"
+                                android:layout_marginEnd="@dimen/padding_10dp"
+                                android:layout_gravity="right|center"
+                                android:layout_height="15dp"/>
+                        </FrameLayout>
+
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/padding_10dp"
+                        android:layout_marginTop="@dimen/padding_15dp"
+                        android:layout_marginEnd="@dimen/padding_10dp">
+
+                        <TextView
+                            style="@style/LabelNormal"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/padding_10dp"
+                            android:layout_weight="1"
+                            android:paddingLeft="@dimen/padding_10dp"
+                            android:layout_gravity="center"
+                            android:text="@string/lbl_attachment"
+                            android:textAllCaps="true"
+                            android:textColor="@color/colorPrimary" />
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/padding_10dp"
+                            android:layout_weight="1">
+
+                            <ImageView
+                                android:id="@+id/imgAttach"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/icon_attachment" />
+                        </FrameLayout>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/ll_check_no"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/padding_10dp"
+                        android:layout_marginTop="@dimen/padding_15dp"
+                        android:layout_marginEnd="@dimen/padding_10dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            style="@style/LabelNormal"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/padding_10dp"
+                            android:layout_weight="1"
+                            android:paddingLeft="@dimen/padding_10dp"
+                            android:text="@string/lbl_cheque_number"
+                            android:textAllCaps="true"
+                            android:textColor="@color/colorPrimary" />
+
+                        <EditText
+                            android:id="@+id/etCheckNo"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/padding_10dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:hint="@string/hint_cheque_number"
+                            android:singleLine="true"
+                            android:textSize="@dimen/text_size_13sp" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/ll_check_dt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/padding_10dp"
+                        android:layout_marginTop="@dimen/padding_15dp"
+                        android:layout_marginEnd="@dimen/padding_10dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            style="@style/LabelNormal"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/padding_10dp"
+                            android:layout_weight="1"
+                            android:paddingLeft="@dimen/padding_10dp"
+                            android:text="@string/lbl_cheque_date"
+                            android:textAllCaps="true"
+                            android:textColor="@color/colorPrimary" />
+
+                        <EditText
+                            android:id="@+id/etCheckDate"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/padding_10dp"
+                            android:layout_weight="1"
+                            android:focusable="false"
+                            android:gravity="center"
+                            android:hint="@string/hint_cheque_date"
+                            android:singleLine="true"
+                            android:textSize="@dimen/text_size_13sp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/ll_bank_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/padding_10dp"
+                        android:layout_marginTop="@dimen/padding_15dp"
+                        android:layout_marginEnd="@dimen/padding_10dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            style="@style/LabelNormal"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/padding_10dp"
+                            android:layout_weight="1"
+                            android:paddingLeft="@dimen/padding_10dp"
+                            android:text="@string/lbl_bank_name"
+                            android:textAllCaps="true"
+                            android:textColor="@color/colorPrimary" />
+
+                        <EditText
+                            android:id="@+id/etBankName"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/padding_10dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:hint="@string/hint_bank_name"
+                            android:singleLine="true"
+                            android:textSize="@dimen/text_size_13sp" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/ll_bank_branch"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/padding_10dp"
+                        android:layout_marginTop="@dimen/padding_15dp"
+                        android:layout_marginEnd="@dimen/padding_10dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            style="@style/LabelNormal"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/padding_10dp"
+                            android:layout_weight="1"
+                            android:paddingLeft="@dimen/padding_10dp"
+                            android:text="@string/lbl_bank_branch"
+                            android:textAllCaps="true"
+                            android:textColor="@color/colorPrimary" />
+
+                        <EditText
+                            android:id="@+id/etBankBranch"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/padding_10dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:hint="@string/hint_bank_branch"
+                            android:singleLine="true"
+                            android:textSize="@dimen/text_size_13sp" />
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/btnPay"
+                        style="@style/AddPostButton"
+                        android:layout_width="@dimen/login_button_width"
+                        android:layout_height="@dimen/login_button_height"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/padding_15dp"
+                        android:layout_marginBottom="@dimen/padding_20dp"
+                        android:text="@string/lbl_submit" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+</RelativeLayout>

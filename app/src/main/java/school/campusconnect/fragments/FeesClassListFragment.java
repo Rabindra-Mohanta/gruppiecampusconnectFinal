@@ -316,6 +316,7 @@ public class FeesClassListFragment extends BaseFragment implements LeafManager.O
             Intent intent = new Intent(getActivity(), FeesListActivity.class);
             intent.putExtra("title",classData.getName());
             intent.putExtra("team_id",classData.getId());
+            intent.putExtra("user_id",classData.userId);
             intent.putExtra("role",role);
             intent.putExtra("accountant",accountant);
             startActivity(intent);

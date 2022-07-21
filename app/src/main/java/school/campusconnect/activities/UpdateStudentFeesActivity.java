@@ -117,6 +117,7 @@ public class UpdateStudentFeesActivity extends BaseActivity implements LeafManag
 
     private String groupId;
     private String teamId;
+    private String user_id;
     private String role;
     private boolean accountant;
     private String title;
@@ -169,8 +170,8 @@ public class UpdateStudentFeesActivity extends BaseActivity implements LeafManag
         setSupportActionBar(mToolBar);
         setBackEnabled(true);
         title=getIntent().getStringExtra("title");
+        user_id=getIntent().getStringExtra("user_id");
         accountant=getIntent().getBooleanExtra("accountant",false);
-        Log.d(TAG,"accountant==>"+accountant);
         if (accountant) {
           btnPay.setVisibility(View.VISIBLE);
         }
@@ -267,7 +268,16 @@ public class UpdateStudentFeesActivity extends BaseActivity implements LeafManag
     @OnClick({R.id.btnCreate, R.id.etDate,R.id.etDatePaid,R.id.btnPay})
     public void onClick(View view) {
         switch (view.getId()) {
+
             case R.id.btnPay:
+
+                Intent intent = new Intent(this, UpdateStudentFeePayActivity.class);
+                intent.putExtra("title",getIntent().getStringExtra("title"));
+                intent.putExtra("groupId",groupId);
+                intent.putExtra("team_id",teamId);
+                intent.putExtra("user_id",user_id);
+                intent.putExtra("resData",new Gson().toJson(studentFees));
+                startActivity(intent);
                 break;
 
             case R.id.btnCreate:

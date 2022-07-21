@@ -28,6 +28,7 @@ public class FeesListActivity extends BaseActivity {
 
     private String mGroupId;
     private String teamId;
+    private String userId;
     private String role;
     private boolean accountant;
     private Menu menu;
@@ -58,9 +59,9 @@ public class FeesListActivity extends BaseActivity {
         if (getIntent().getExtras() != null) {
             mGroupId = GroupDashboardActivityNew.groupId;
             teamId = getIntent().getStringExtra("team_id");
+            userId = getIntent().getStringExtra("user_id");
             role = getIntent().getStringExtra("role");
             accountant = getIntent().getBooleanExtra("accountant",false);
-            Log.d("FEESLISTACTIVITY","accountant==>"+accountant);
         }
 
     }

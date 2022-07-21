@@ -1,5 +1,7 @@
 package school.campusconnect.activities;
 
+
+
 import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -2547,14 +2549,18 @@ public class GroupDashboardActivityNew extends BaseActivity
                         intent = new Intent(this, FeesListActivity.class);
                         intent.putExtra("group_id", groupId);
                         intent.putExtra("team_id", group.details.teamId);
+                        intent.putExtra("user_id", group.details.userId);
                         intent.putExtra("title", group.details.studentName);
                         intent.putExtra("role", group.role);
                     } else {
-                        intent = new Intent(this, StudentFeesActivity.class);
+                        intent = new Intent(this, UpdateStudentFeesActivity.class);
                         intent.putExtra("groupId", groupId);
                         intent.putExtra("title", group.details.studentName);
                         intent.putExtra("team_id", group.details.teamId);
                         intent.putExtra("user_id", group.details.userId);
+                        intent.putExtra("role", group.role);
+                        intent.putExtra("accountant", group.accountant);
+                       // intent.putExtra("StudentFees", new Gson().toJson(studentData));
                     }
                     startActivity(intent);
 
