@@ -2077,6 +2077,10 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<StaffAttendanceRes> getStaffAttendance(@Path("group_id") String group_id,@Query("day") int day, @Query("month") int month, @Query("year") int year);
 
+    @GET("api/v1/groups/{group_id}/staff/attendance/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<StaffAttendanceRes> getStaffAttendanceFullMornth(@Path("group_id") String group_id, @Query("month") int month, @Query("year") int year);
+
 
 /*
     @GET("api/v1/groups/{group_id}/staff/attendance/get/approval?")
