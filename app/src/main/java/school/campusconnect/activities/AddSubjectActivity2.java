@@ -163,6 +163,7 @@ public class AddSubjectActivity2 extends BaseActivity implements LeafManager.OnA
                     if (isEdit) {
                         if (isAssign)
                         {
+                            btnCreateClass.setEnabled(false);
                             AddSubjectStaffReq request = new AddSubjectStaffReq();
                             request.setSubjectName(etName.getText().toString());
                             request.setStaffId(adapter.getSelectedList());
@@ -175,6 +176,7 @@ public class AddSubjectActivity2 extends BaseActivity implements LeafManager.OnA
                         }
                         else
                         {
+                            btnCreateClass.setEnabled(false);
                             AddSubjectStaffReq request = new AddSubjectStaffReq();
                             request.setSubjectName(etName.getText().toString());
                             request.setStaffId(adapter.getSelectedList());
@@ -186,6 +188,7 @@ public class AddSubjectActivity2 extends BaseActivity implements LeafManager.OnA
                     }
                     else
                     {
+                        btnCreateClass.setEnabled(false);
                         AddSubjectStaffReq request = new AddSubjectStaffReq();
                         request.setSubjectName(etName.getText().toString());
                         request.setStaffId(adapter.getSelectedList());

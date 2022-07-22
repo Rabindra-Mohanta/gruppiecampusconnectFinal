@@ -79,11 +79,13 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
+
         inits();
 
         bindChapter();
 
-        //     getLocallyAll();
+
 
     }
 
@@ -152,13 +154,6 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
                         }
                     }
 
-                  /*  for (int i = 0;i<syllabusDataList.size();i++)
-                    {
-                        if (binding.spChapter.getSelectedItem().toString().equalsIgnoreCase(syllabusDataList.get(i).getChapterName()))
-                        {
-                            AppLog.e(TAG, "Compare Value " + syllabusDataList.get(i).getChapterId());
-                        }
-                    }*/
                 }
 
                 @Override
@@ -188,7 +183,8 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
                 data.setTopicData(new Gson().fromJson(tblList.get(i).topicsList, new TypeToken<ArrayList<SyllabusListModelRes.TopicData>>() {}.getType()));
                 syllabusDataList.add(data);
             }
-            Collections.reverse(syllabusDataList);
+
+
             adapter.add(syllabusDataList);
 
 
@@ -217,7 +213,8 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
                 data.setTopicData(new Gson().fromJson(tblList.get(i).topicsList, new TypeToken<ArrayList<SyllabusListModelRes.TopicData>>() {}.getType()));
                 syllabusDataList.add(data);
             }
-            Collections.reverse(syllabusDataList);
+
+
             adapter.add(syllabusDataList);
         }
     }
@@ -233,6 +230,8 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
 
         adapter = new SyllabusAdapter();
         binding.rvSyllabus.setAdapter(adapter);
+        apiCall();
+
     }
 
     @Override
@@ -251,9 +250,12 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
     }
 
     private void apiCall()
+
     {
+
         if (isConnectionAvailable())
-        {
+        {    binding.progressBar.setVisibility(View.VISIBLE);
+
             showLoadingBar(binding.progressBar);
             manager.getSyllabus(this, GroupDashboardActivityNew.groupId,teamId,subjectId);
 
@@ -270,11 +272,20 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
         switch (apiId)
         {
             case LeafManager.API_GET_SYLLABUS:
+                binding.progressBar.setVisibility(View.GONE);
                 SyllabusListModelRes res = (SyllabusListModelRes) response;
+                if(res.equals(null) || res.getSyllabusData().size()==0)
+                {
+                    binding.txtEmpty.setText(getResources().getString(R.string.txt_no_syllabus_found));
+                }
+            {  binding.txtEmpty.setText("");
                 saveToLocally(res.getSyllabusData());
-                break;
+            }
+
+            break;
 
             case LeafManager.API_STATUS_PLAN:
+                binding.progressBar.setVisibility(View.GONE);
                 syllabusDataList.clear();
                 SyllabusTBL.deleteAll(teamId,subjectId);
                 adapter.add(syllabusDataList);
@@ -282,6 +293,7 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
                 break;
 
             case LeafManager.API_CHANGE_STATUS_PLAN:
+                binding.progressBar.setVisibility(View.GONE);
                 syllabusDataList.clear();
                 SyllabusTBL.deleteAll(teamId,subjectId);
                 adapter.add(syllabusDataList);
@@ -308,7 +320,8 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
             }
         }
         syllabusDataList.addAll(syllabusData);
-        Collections.reverse(syllabusDataList);
+
+
         adapter.add(syllabusDataList);
 
         bindChapter();
@@ -317,13 +330,14 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
 
     @Override
     public void onFailure(int apiId, String msg) {
-
+        binding.progressBar.setVisibility(View.GONE);
         hideLoadingBar();
         Toast.makeText(getContext(),msg,Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onException(int apiId, String msg) {
+        binding.progressBar.setVisibility(View.GONE);
         hideLoadingBar();
         Toast.makeText(getContext(),msg,Toast.LENGTH_SHORT).show();
     }
@@ -382,21 +396,17 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
 
             if(list!=null)
             {
-                if(list.size()==0)
-                {
-                    binding.txtEmpty.setText(getResources().getString(R.string.txt_no_syllabus_found));
-                }
-                else {
 
-                    binding.txtEmpty.setText("");
-                }
+
+                binding.txtEmpty.setText("");
+
 
                 return list.size();
             }
             else
             {
 
-                binding.txtEmpty.setText(getResources().getString(R.string.txt_no_syllabus_found));
+
                 return 0;
             }
 
@@ -696,6 +706,7 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
 
         if (isUpdate)
         {
+
 
             ChangeStatusPlanModel.ChangeStatusModelReq req = new ChangeStatusPlanModel.ChangeStatusModelReq();
             req.setToDate(planto);
