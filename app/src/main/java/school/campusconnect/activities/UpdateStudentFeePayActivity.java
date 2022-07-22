@@ -509,7 +509,7 @@ public class UpdateStudentFeePayActivity extends BaseActivity {
             AppLog.e(TAG, "send data : " + new Gson().toJson(payFeesRequest));
 
             LeafManager leafManager = new LeafManager();
-           // leafManager.payFeesByStudent(this, groupId, team_id, user_id, payFeesRequest);
+            leafManager.payFeesByStudent(this, groupId, team_id, user_id, payFeesRequest);
 
         } else {
             final String key = AmazoneHelper.getAmazonS3Key(Constants.FILE_TYPE_IMAGE);
