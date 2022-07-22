@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,12 +15,15 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.gson.Gson;
 
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -32,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.BuildConfig;
@@ -39,13 +44,10 @@ import school.campusconnect.LeafApplication;
 import school.campusconnect.R;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.staff.StaffAttendanceRes;
-import school.campusconnect.datamodel.student.StudentRes;
-import school.campusconnect.fragments.AttendanceReportFragment;
-import school.campusconnect.fragments.ClassStudentListFragment;
+
 import school.campusconnect.fragments.DatePickerFragment;
 import school.campusconnect.network.LeafManager;
 import school.campusconnect.utils.AppLog;
-
 public class StaffAttendanceReport extends BaseActivity {
 
     @Bind(R.id.toolbar)
@@ -54,18 +56,15 @@ public class StaffAttendanceReport extends BaseActivity {
     public RecyclerView attendanceReportRv;
     @Bind(R.id.progressBar)
     public ProgressBar progressBar;
-
     @Bind(R.id.date)
     public TextView date;
     @Bind(R.id.imgDatePicker)
     public ImageView imgDatePicker;
-    private String DateStr = "20-07-2022";
-
+    private String DateStr;
     StaffAttendance adapter;
     Calendar calendar;
-    int day,month,year;
+    int day, month, year;
     LeafManager leafManager;
-
     StaffAttendanceRes.StaffAttendData data;
     ArrayList<StaffAttendanceRes.StaffAttendData> staffAttendData1;
 
@@ -98,44 +97,27 @@ public class StaffAttendanceReport extends BaseActivity {
         @Override
         public void onBindViewHolder(@NonNull StaffAttendanceReport.ViewHOlder holder, int position) {
             data = staffAttendData.get(position);
-
             holder.tvStaffName.setText(data.getName());
-
-
-
-            if (data.getAttendance() != null && data.getAttendance().size() > 0)
-            {
-                for (int i = 0;i<data.getAttendance().size();i++)
-                {
-                    if (data.getAttendance().get(i).getSession().equalsIgnoreCase("morning"))
-                    {
-                        if (data.getAttendance().get(i).getAttendance().equalsIgnoreCase("present"))
-                        {
+            if (data.getAttendance() != null && data.getAttendance().size() > 0) {
+                for (int i = 0; i < data.getAttendance().size(); i++) {
+                    if (data.getAttendance().get(i).getSession().equalsIgnoreCase("morning")) {
+                        if (data.getAttendance().get(i).getAttendance().equalsIgnoreCase("present")) {
                             holder.Morning.setText("P");
-
-
-                        }
-                        else{
+                        } else {
                             holder.Morning.setText("A");
                         }
                     }
-
-                    if (data.getAttendance().get(i).getSession().equalsIgnoreCase("afternoon"))
-                    {
-                        if (data.getAttendance().get(i).getAttendance().equalsIgnoreCase("present"))
-                        {
+                    if (data.getAttendance().get(i).getSession().equalsIgnoreCase("afternoon")) {
+                        if (data.getAttendance().get(i).getAttendance().equalsIgnoreCase("present")) {
                             holder.afterNoon.setText("P");
-                        }
-                        else{
+                        } else {
                             holder.afterNoon.setText("A");
                         }
                     }
                 }
 
 
-            }
-            else
-            {
+            } else {
                 holder.afterNoon.setText("");
                 holder.Morning.setText("");
 
@@ -143,24 +125,17 @@ public class StaffAttendanceReport extends BaseActivity {
             }
 
 
-
-
-
-
-
-
-
         }
 
         @Override
         public int getItemCount() {
-            return   staffAttendData != null ? staffAttendData.size() : 0;
+            return staffAttendData != null ? staffAttendData.size() : 0;
 
         }
 
         public void add(ArrayList<StaffAttendanceRes.StaffAttendData> staffAttendData) {
             this.staffAttendData = staffAttendData;
-            staffAttendData1=staffAttendData;
+
             notifyDataSetChanged();
         }
     }
@@ -189,7 +164,7 @@ public class StaffAttendanceReport extends BaseActivity {
         calendar = Calendar.getInstance();
 
         day = calendar.get(Calendar.DAY_OF_MONTH);
-        month = calendar.get(Calendar.MONTH)+1;
+        month = calendar.get(Calendar.MONTH) + 1;
         year = calendar.get(Calendar.YEAR);
         setInitialData();
         imgDatePicker.setOnClickListener(new View.OnClickListener() {
@@ -201,19 +176,19 @@ public class StaffAttendanceReport extends BaseActivity {
 
     }
 
-    private void apiCall( Integer day,Integer month,Integer year)
-    {
+    private void apiCall(Integer day, Integer month, Integer year) {
         progressBar.setVisibility(View.VISIBLE);
         adapter = new StaffAttendance();
         attendanceReportRv.setAdapter(adapter);
 
 
-        leafManager.getStaffAttendance(this,GroupDashboardActivityNew.groupId,day,month,year);
 
+        leafManager.getStaffAttendance(this, GroupDashboardActivityNew.groupId, day, month, year);
+        leafManager.getStaffAttendanceOfFullMornt(this, GroupDashboardActivityNew.groupId, month, year);
     }
 
     void setInitialData() {
-
+        DateStr=day+"-"+month+"-"+year;
         date.setText(DateStr);
     }
 
@@ -226,9 +201,9 @@ public class StaffAttendanceReport extends BaseActivity {
                 date.setText(format.format(c.getTime()));
 
                 day = c.get(Calendar.DAY_OF_MONTH);
-                month = c.get(Calendar.MONTH)+1;
+                month = c.get(Calendar.MONTH) + 1;
                 year = c.get(Calendar.YEAR);
-                apiCall(day,month,year);
+                apiCall(day, month, year);
             }
         });
         fragment2.setTitle(R.string.select_date);
@@ -262,7 +237,7 @@ public class StaffAttendanceReport extends BaseActivity {
 
     @Override
     protected void onStart() {
-        apiCall(day,month,year);
+        apiCall(day, month, year);
         super.onStart();
     }
 
@@ -270,12 +245,22 @@ public class StaffAttendanceReport extends BaseActivity {
     public void onSuccess(int apiId, BaseResponse response) {
 
         progressBar.setVisibility(View.GONE);
-        if (LeafManager.API_STAFF_ATTENDACNCE == apiId)
-        {
+        if (LeafManager.API_STAFF_ATTENDACNCE == apiId) {
             StaffAttendanceRes res = (StaffAttendanceRes) response;
 
             adapter.add(res.getStaffAttendData());
 
+        }
+
+        if (LeafManager.API_STAFF_ATTENDACNCE_FULL_MORNTh == apiId) {
+            StaffAttendanceRes res = (StaffAttendanceRes) response;
+
+            if(staffAttendData1!=null)
+            {
+                staffAttendData1.clear();
+            }
+            Log.e("Data Data","Data Data:"+new Gson().toJson(res));
+            staffAttendData1 = res.getStaffAttendData();
         }
         super.onSuccess(apiId, response);
 
@@ -285,18 +270,16 @@ public class StaffAttendanceReport extends BaseActivity {
     @Override
     public void onException(int apiId, String msg) {
         progressBar.setVisibility(View.GONE);
-        Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_something_went_wrong),Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_something_went_wrong), Toast.LENGTH_LONG).show();
         super.onException(apiId, msg);
     }
 
     @Override
     public void onFailure(int apiId, String msg) {
         progressBar.setVisibility(View.GONE);
-        Toast.makeText(getApplicationContext(),getResources().getString(R.string.toast_something_went_wrong),Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), getResources().getString(R.string.toast_something_went_wrong), Toast.LENGTH_LONG).show();
         super.onFailure(apiId, msg);
     }
-
-
 
 
     public void exportDataToCSV() {
@@ -308,7 +291,7 @@ public class StaffAttendanceReport extends BaseActivity {
         if (!mainFolder.exists()) {
             mainFolder.mkdir();
         }
-        File csvFolder = new File(mainFolder,"Excel");
+        File csvFolder = new File(mainFolder, "Excel");
         if (!csvFolder.exists()) {
             csvFolder.mkdir();
         }
@@ -319,24 +302,54 @@ public class StaffAttendanceReport extends BaseActivity {
                 file.createNewFile();
             }
             HSSFWorkbook workbook = new HSSFWorkbook();
-            HSSFSheet firstSheet = workbook.createSheet(data.getName());
+            HSSFSheet firstSheet = workbook.createSheet("Staff Attendance Report");
             HSSFRow rowA = firstSheet.createRow(0);
             rowA.createCell(0).setCellValue("Name");
-            rowA.createCell(1).setCellValue("Morning");
-            rowA.createCell(2).setCellValue("afternoon");
+            int l=1;
 
 
 
-            if(staffAttendData1!=null){
-                for(int i=0;i<staffAttendData1.size();i++){
-                    StaffAttendanceRes.StaffAttendData item = staffAttendData1.get(i);
-                    HSSFRow rowData = firstSheet.createRow(i + 1);
+            for(int k=0;k<staffAttendData1.size();k++)
+
+            {
+                for(int i=0;i<staffAttendData1.get(k).getAttendance().size();i++)
+                {
+
+
+                    rowA.createCell(i+l).setCellValue(staffAttendData1.get(k).getAttendance().get(i).getSession()+" ("+staffAttendData1.get(k).getAttendance().get(i).getDate()+")");
+
+
+
+                }
+
+            }
+
+
+
+
+            if (staffAttendData1.size() > 0) {
+
+
+                for (int j=0;j<staffAttendData1.size();j++)
+                {
+
+                    StaffAttendanceRes.StaffAttendData item = staffAttendData1.get(j);
+                    HSSFRow rowData = firstSheet.createRow(j + 1);
                     rowData.createCell(0).setCellValue(item.getName());
-                    rowData.createCell(1).setCellValue(item.getAttendance().get(i).getAttendance());
-                    rowData.createCell(2).setCellValue(item.getAttendance().get(i).getAttendance());
+                    int l1=1;
+                    for (int i = 0; i < item.getAttendance().size(); i++) {
+
+                        StaffAttendanceRes.AttendanceData staffAttendData = item.getAttendance().get(i);
+
+                        rowData.createCell(l1+i).setCellValue(staffAttendData.getAttendance());
+
+
+
+                    }
 
                 }
             }
+
             FileOutputStream fos = null;
             try {
                 fos = new FileOutputStream(file);
@@ -377,7 +390,6 @@ public class StaffAttendanceReport extends BaseActivity {
     }
 
 
-
     private void shareFile(File file) {
         Uri uriFile;
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
@@ -387,11 +399,29 @@ public class StaffAttendanceReport extends BaseActivity {
         }
         Intent sharingIntent = new Intent();
         sharingIntent.setAction(Intent.ACTION_SEND);
-        sharingIntent.putExtra(Intent.EXTRA_STREAM, uriFile) ;
+        sharingIntent.putExtra(Intent.EXTRA_STREAM, uriFile);
         sharingIntent.setType("text/csv");
         startActivity(Intent.createChooser(sharingIntent, "share file with"));
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 21: {
+                int gratResult = grantResults[0];
+                if (gratResult == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(getApplicationContext(), "Permission Granted", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Permission Denied", Toast.LENGTH_LONG).show();
+                }
 
+                break;
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
 }
+
+
+
 

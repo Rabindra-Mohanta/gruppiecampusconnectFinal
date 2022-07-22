@@ -566,6 +566,7 @@ public class LeafManager {
     public static final int API_ID_DO_REGISTER = 357;
 
     public static final int API_STAFF_ATTENDACNCE =  352;
+    public static final int API_STAFF_ATTENDACNCE_FULL_MORNTh =  3521;
    // public static final int API_APPROVAL_STAFF_ATTENDACNCE =  348;
     public static final int API_TAKE_STAFF_ATTENDACNCE =  344;
     public static final int API_CHNAGE_STAFF_ATTENDACNCE =  349;
@@ -13459,6 +13460,46 @@ public class LeafManager {
         }, serviceErrorType);
 
     }
+
+
+
+
+    public void getStaffAttendanceOfFullMornt(OnCommunicationListener listListener, String group_id,int month,int year) {
+        mOnCommunicationListener = listListener;
+        LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
+        LeafService service = apiClient.getService(LeafService.class);
+        final Call<StaffAttendanceRes> model = service.getStaffAttendanceFullMornth(group_id,month,year);
+        ResponseWrapper<StaffAttendanceRes> wrapper = new ResponseWrapper<>(model);
+
+        final Type serviceErrorType = new TypeToken<ErrorResponseModel<OnCommunicationListener>>() {
+        }.getType();
+
+        wrapper.execute(API_STAFF_ATTENDACNCE_FULL_MORNTh, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponseModel<OnCommunicationListener>>() {
+            @Override
+            public void handle200(int apiId, BaseResponse response) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onSuccess(apiId, response);
+                }
+            }
+
+            @Override
+            public void handleError(int apiId, int code, ErrorResponseModel<OnCommunicationListener> error) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onFailure(apiId, error.status + ":" + error.title);
+
+                }
+            }
+
+            @Override
+            public void handleException(int apiId, Exception e) {
+                if (mOnCommunicationListener != null) {
+                    mOnCommunicationListener.onException(apiId, e.getMessage());
+                }
+            }
+        }, serviceErrorType);
+
+    }
+
 
 
    /* public void getStaffAttendance(OnCommunicationListener listListener, String group_id,String day,String month,String year) {
