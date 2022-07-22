@@ -263,7 +263,9 @@ public class TestExamListFragment extends BaseFragment implements LeafManager.On
             txtEmpty.setText("");
         } else {
             txtEmpty.setVisibility(View.VISIBLE);
-            txtEmpty.setText(getResources().getString(R.string.txt_no_test_exam_found));
+            if (getActivity() != null) {
+                txtEmpty.setText(getResources().getString(R.string.txt_no_test_exam_found));
+            }
         }
 
     }

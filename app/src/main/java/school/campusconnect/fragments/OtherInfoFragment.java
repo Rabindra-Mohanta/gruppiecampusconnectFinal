@@ -345,7 +345,9 @@ else
                 religionList.addAll(res.getReligionData().get(0).getReligionList());
 
                 if (res.getReligionData().size() > 0) {
-                    religionAdapter = new ArrayAdapter<String>(getActivity(), R.layout.item_spinner, R.id.tvItem, religionList);
+                    if (getActivity()!=null) {
+                        religionAdapter = new ArrayAdapter<String>(getActivity(), R.layout.item_spinner, R.id.tvItem, religionList);
+                    }
                     otherInfoBinding.etReligion.setAdapter(religionAdapter);
                     otherInfoBinding.etReligion.setEnabled(true);
                 }
