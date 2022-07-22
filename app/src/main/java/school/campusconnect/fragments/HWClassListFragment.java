@@ -532,7 +532,7 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
     public void onFailure(int apiId, String msg) {
        // hideLoadingBar();
         binding.progressBar.setVisibility(View.GONE);
-        Toast.makeText(getContext(),msg,Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(),msg,Toast.LENGTH_SHORT).show();
         //    progressBar.setVisibility(View.GONE);
     }
 
@@ -540,7 +540,7 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
     public void onException(int apiId, String msg) {
         // hideLoadingBar();
         binding.progressBar.setVisibility(View.GONE);
-        Toast.makeText(getContext(),msg,Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(),msg,Toast.LENGTH_SHORT).show();
         //    progressBar.setVisibility(View.GONE);
     }
 

@@ -195,7 +195,10 @@ public class ProfileBasicFragment extends BaseFragment implements View.OnClickLi
     }
 
     public void fillDetails(ProfileItem item) {
-        edtName.editText.setText(item.name);
+        if(item.name != null){
+            edtName.editText.setText(item.name);
+        }
+
         edtPhone.editText.setText(item.phone);
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
         SimpleDateFormat format1 = new SimpleDateFormat("dd MMM, yyyy", Locale.getDefault());

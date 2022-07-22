@@ -304,7 +304,7 @@ public class BaseFragment extends Fragment {
 
         } catch (Exception e) {
            AppLog.e("SnackBar", "error is " + e.toString());
-            SMBDialogUtils.showSMBDialogOK(getActivity(), getString(R.string.no_internet), new DialogInterface.OnClickListener() {
+            SMBDialogUtils.showSMBDialogOK(getActivity(), getResources().getString(R.string.no_internet), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     startActivityForResult(new Intent(android.provider.Settings.ACTION_SETTINGS), 0);

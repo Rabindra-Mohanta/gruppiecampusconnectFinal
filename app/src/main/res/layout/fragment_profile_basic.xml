@@ -12,7 +12,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/padding_15dp"
+        android:layout_marginStart="@dimen/padding_15dp"
+        android:layout_marginTop="@dimen/padding_15dp"
+        android:layout_marginEnd="@dimen/padding_15dp"
+        android:layout_marginBottom="@dimen/padding_15dp"
         android:orientation="vertical">
 
         <school.campusconnect.views.DrawableEditText
@@ -32,8 +35,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/padding_20dp"
             android:inputType="number"
-            app:leftDrawable="@drawable/ic_phone"
             android:textAppearance="@style/TextAppearance.Light"
+            app:leftDrawable="@drawable/ic_phone"
             app:textHint="@string/lbl_phone2" />
 
         <school.campusconnect.views.DrawableEditText
@@ -41,8 +44,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/padding_20dp"
-            app:leftDrawable="@drawable/ic_gender"
             android:textAppearance="@style/TextAppearance.Light"
+            app:leftDrawable="@drawable/ic_gender"
             app:textHint="@string/lbl_gender" />
 
         <school.campusconnect.views.DrawableEditText
@@ -50,8 +53,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/padding_20dp"
-            app:leftDrawable="@drawable/ic_cake"
             android:textAppearance="@style/TextAppearance.Light"
+            app:leftDrawable="@drawable/ic_cake"
             app:textHint="@string/hint_lead_dob" />
 
         <school.campusconnect.views.DrawableEditText
@@ -60,8 +63,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/padding_20dp"
             android:inputType="textNoSuggestions"
-            app:leftDrawable="@drawable/ic_email"
             android:textAppearance="@style/TextAppearance.Light"
+            app:leftDrawable="@drawable/ic_email"
             app:textHint="@string/lbl_email_id" />
 
         <school.campusconnect.views.DrawableEditText
@@ -90,9 +93,9 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/padding_20dp"
             android:inputType="textNoSuggestions"
+            android:textAppearance="@style/TextAppearance.Light"
             android:visibility="visible"
             app:leftDrawable="@drawable/ic_contacts"
-            android:textAppearance="@style/TextAppearance.Light"
             app:textHint="@string/hint_lead_address" />
 
         <school.campusconnect.views.DrawableEditText
@@ -101,9 +104,9 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/padding_20dp"
             android:inputType="textNoSuggestions"
+            android:textAppearance="@style/TextAppearance.Light"
             android:visibility="gone"
             app:leftDrawable="@drawable/ic_contacts"
-            android:textAppearance="@style/TextAppearance.Light"
             app:textHint="@string/hint_lead_roll" />
 
     </LinearLayout>

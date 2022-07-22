@@ -85,18 +85,12 @@ public class StudentFeesPayActivity extends BaseActivity {
     @Bind(R.id.tv_toolbar_title)
     public TextView tvTitle;
 
-    @Bind(R.id.etTotalFees)
-    public EditText etTotalFees;
-    @Bind(R.id.etTotalPaid)
-    public EditText etTotalPaid;
-    @Bind(R.id.etDueAmount)
-    public EditText etDueAmount;
     @Bind(R.id.btnPay)
     public Button btnPay;
     @Bind(R.id.progressBar)
     ProgressBar progressBar;
-    @Bind(R.id.etDueAmountPay)
-    EditText etDueAmountPay;
+    @Bind(R.id.etDueAmount)
+    EditText etDueAmount;
     @Bind(R.id.etDate)
     EditText etDate;
     @Bind(R.id.etMode)
@@ -141,8 +135,8 @@ public class StudentFeesPayActivity extends BaseActivity {
         AppLog.e(TAG, "user_id : " + user_id);
 
 
-        etTotalPaid.setText(TextUtils.isEmpty(resData.totalAmountPaid) ? "0" : resData.totalAmountPaid);
-        etTotalFees.setText(resData.totalFee);
+       /* etTotalPaid.setText(TextUtils.isEmpty(resData.totalAmountPaid) ? "0" : resData.totalAmountPaid);
+        etTotalFees.setText(resData.totalFee);*/
         try {
             if (!TextUtils.isEmpty(resData.totalFee) && !TextUtils.isEmpty(resData.totalAmountPaid)) {
                 int dueAmount = Integer.parseInt(resData.totalFee) - Integer.parseInt(resData.totalAmountPaid);
@@ -301,7 +295,7 @@ public class StudentFeesPayActivity extends BaseActivity {
             }
             payFeesRequest = new PayFeesRequest();
             payFeesRequest.paidDate = etDate.getText().toString();
-            payFeesRequest.amountPaid = etDueAmountPay.getText().toString();
+            payFeesRequest.amountPaid = etDueAmount.getText().toString();
             payFeesRequest.paymentMode = etMode.getText().toString();
             progressDialog.setMessage("Uploading Image...");
             progressDialog.show();
@@ -331,7 +325,7 @@ public class StudentFeesPayActivity extends BaseActivity {
 
         try {
             int actualDue = Integer.parseInt(etDueAmount.getText().toString());
-            int payDue = Integer.parseInt(etDueAmountPay.getText().toString());
+            int payDue = Integer.parseInt(etDueAmount.getText().toString());
             if(payDue>actualDue){
                 Toast.makeText(this, getResources().getString(R.string.toast_paid_amount_should_not_grater_than_amount), Toast.LENGTH_SHORT).show();
                 valid = false;
@@ -340,17 +334,17 @@ public class StudentFeesPayActivity extends BaseActivity {
             e.printStackTrace();
         }
 
-        if (!isValueValid(etDueAmountPay)) {
+        if (!isValueValid(etDueAmount)) {
             valid = false;
         } else if (!isValueValid(etDate)) {
-            etDueAmountPay.setError(null);
+            etDueAmount.setError(null);
             valid = false;
         } else if (!isValueValid(etMode)) {
-            etDueAmountPay.setError(null);
+            etDueAmount.setError(null);
             etDate.setError(null);
             valid = false;
         } else if (listImages.size() == 0) {
-            etDueAmountPay.setError(null);
+            etDueAmount.setError(null);
             etDate.setError(null);
             etMode.setError(null);
             Toast.makeText(this, getResources().getString(R.string.toast_please_add_attachment), Toast.LENGTH_SHORT).show();

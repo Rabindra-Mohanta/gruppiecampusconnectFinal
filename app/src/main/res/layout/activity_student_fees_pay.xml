@@ -29,67 +29,6 @@
             android:layout_marginBottom="@dimen/padding_10dp"
             android:orientation="vertical">
 
-            <TextView
-                style="@style/LabelNormal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_15dp"
-                android:paddingLeft="@dimen/padding_10dp"
-                android:text="@string/lbl_total_fees"
-                android:textAllCaps="true"
-                android:textColor="@color/colorPrimary" />
-
-            <EditText
-                android:id="@+id/etTotalFees"
-                style="@style/RegEditText"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/login_button_height"
-                android:layout_marginTop="@dimen/padding_5dp"
-                android:digits="1234567890"
-                android:focusable="false"
-                android:inputType="numberDecimal" />
-
-            <TextView
-                style="@style/LabelNormal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_15dp"
-                android:paddingLeft="@dimen/padding_10dp"
-                android:text="@string/lbl_total_amount_paid"
-                android:textAllCaps="true"
-                android:textColor="@color/colorPrimary" />
-
-            <EditText
-                android:id="@+id/etTotalPaid"
-                style="@style/RegEditText"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/login_button_height"
-                android:layout_marginTop="@dimen/padding_5dp"
-                android:layout_marginBottom="@dimen/padding_5dp"
-                android:digits="1234567890"
-                android:enabled="false"
-                android:inputType="numberDecimal" />
-
-
-            <TextView
-                style="@style/LabelNormal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_15dp"
-                android:paddingLeft="@dimen/padding_10dp"
-                android:text="@string/due_amount"
-                android:textAllCaps="true"
-                android:textColor="@color/colorPrimary" />
-
-            <EditText
-                android:id="@+id/etDueAmount"
-                style="@style/RegEditText"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/login_button_height"
-                android:layout_marginTop="@dimen/padding_5dp"
-                android:digits="1234567890"
-                android:enabled="false"
-                android:inputType="numberDecimal" />
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -107,36 +46,84 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <TextView
-                        style="@style/LabelHeader2"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/padding_10dp"
                         android:layout_marginTop="@dimen/padding_15dp"
-                        android:text="@string/lbl_amount_paid"
-                        android:textAllCaps="true"
-                        android:textColor="@color/colorPrimary" />
+                        android:layout_marginEnd="@dimen/padding_10dp">
+
+                        <TextView
+                            style="@style/LabelNormal"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/padding_10dp"
+                            android:layout_weight="1"
+                            android:paddingLeft="@dimen/padding_10dp"
+                            android:text="@string/lbl_due_amount"
+                            android:textAllCaps="true"
+                            android:textColor="@color/colorPrimary" />
+
+                        <EditText
+                            android:id="@+id/etDueAmount"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/padding_10dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:editable="false"
+                            android:hint="@string/hint_due_amount"
+                            android:singleLine="true"
+                            android:textSize="@dimen/text_size_13sp" />
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/padding_10dp"
-                        android:layout_marginTop="@dimen/padding_10dp"
+                        android:layout_marginTop="@dimen/padding_15dp"
                         android:layout_marginEnd="@dimen/padding_10dp">
 
-                        <EditText
-                            android:id="@+id/etDueAmountPay"
+                        <TextView
+                            style="@style/LabelNormal"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="@dimen/padding_10dp"
                             android:layout_weight="1"
-                            android:digits="1234567890"
+                            android:paddingLeft="@dimen/padding_10dp"
+                            android:text="@string/lbl_pay_amount"
+                            android:textAllCaps="true"
+                            android:textColor="@color/colorPrimary" />
+
+                        <EditText
+                            android:id="@+id/etPayAmount"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/padding_10dp"
+                            android:layout_weight="1"
                             android:gravity="center"
-                            android:hint="@string/hint_amount"
-                            android:inputType="numberDecimal"
-                            android:maxLength="7"
+                            android:hint="@string/hint_pay_amount"
                             android:singleLine="true"
                             android:textSize="@dimen/text_size_13sp" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/padding_10dp"
+                        android:layout_marginTop="@dimen/padding_15dp"
+                        android:layout_marginEnd="@dimen/padding_10dp">
+
+                        <TextView
+                            style="@style/LabelNormal"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/padding_10dp"
+                            android:layout_weight="1"
+                            android:paddingLeft="@dimen/padding_10dp"
+                            android:text="@string/lbl_pay_date"
+                            android:layout_gravity="center"
+                            android:textAllCaps="true"
+                            android:textColor="@color/colorPrimary" />
 
                         <EditText
                             android:id="@+id/etDate"
@@ -144,9 +131,9 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/padding_10dp"
                             android:layout_weight="1"
-                            android:focusable="false"
                             android:gravity="center"
-                            android:hint="@string/paid_date"
+                            android:focusable="false"
+                            android:hint="@string/hint_pay_date"
                             android:singleLine="true"
                             android:textSize="@dimen/text_size_13sp" />
                     </LinearLayout>
