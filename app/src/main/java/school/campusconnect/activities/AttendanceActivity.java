@@ -274,8 +274,8 @@ public class AttendanceActivity extends BaseActivity implements AttendanceAdapte
             showNoNetworkMsg();
             return;
         }
-        showLoadingBar(progressBar,false);
-       // progressBar.setVisibility(View.VISIBLE);
+        //showLoadingBar(progressBar,false);
+        progressBar.setVisibility(View.VISIBLE);
 
 
         for (int i = 0; i < listAbsent.size(); i++) {
@@ -328,17 +328,17 @@ public class AttendanceActivity extends BaseActivity implements AttendanceAdapte
             showNoNetworkMsg();
             return;
         }
-        showLoadingBar(progressBar,false);
-      //  progressBar.setVisibility(View.VISIBLE);
+     //   showLoadingBar(progressBar,false);
+        progressBar.setVisibility(View.VISIBLE);
         leafManager.importStudent(this, groupId, teamId);
     }
 
     @Override
     public void onSuccess(int apiId, BaseResponse response) {
-        hideLoadingBar();
+      //  hideLoadingBar();
 
 
-          //  progressBar.setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
         switch (apiId) {
             case LeafManager.API_IMPORT_STUDENTS:
                 getAttendanceList();
@@ -429,8 +429,8 @@ public class AttendanceActivity extends BaseActivity implements AttendanceAdapte
     @Override
     public void onFailure(int apiId, String msg) {
         if (progressBar != null)
-            hideLoadingBar();
-          //  progressBar.setVisibility(View.GONE);
+          //  hideLoadingBar();
+            progressBar.setVisibility(View.GONE);
         AppLog.e("onFailure", "Failure");
         if (msg.contains("401") || msg.contains("Unauthorized")) {
             Toast.makeText(this, getResources().getString(R.string.msg_logged_out), Toast.LENGTH_SHORT).show();
@@ -443,8 +443,8 @@ public class AttendanceActivity extends BaseActivity implements AttendanceAdapte
     @Override
     public void onException(int apiId, String msg) {
         if (progressBar != null)
-            hideLoadingBar();
-        //  progressBar.setVisibility(View.GONE);
+         //   hideLoadingBar();
+          progressBar.setVisibility(View.GONE);
     }
 
     private String nameStudent;

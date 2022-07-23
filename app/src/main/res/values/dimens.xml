@@ -88,7 +88,7 @@
     <dimen name="about_image_size">120dp</dimen>
     <dimen name="padding_3dp">3dp</dimen>
     <dimen name="home_image_size">60dp</dimen>
-    <dimen name="item_image_size">50dp</dimen>
+    <dimen name="item_image_size">40dp</dimen>
 
     <dimen name="erasersize">30dp</dimen>
 

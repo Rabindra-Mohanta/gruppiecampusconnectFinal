@@ -117,12 +117,12 @@ public class TeacherClassListFragment extends BaseFragment implements LeafManage
         if (list.size() != 0) {
             ArrayList<ClassResponse.ClassData> result = new ArrayList<>();
 
-            if (role != null && role.equalsIgnoreCase("admin"))
-            {
-                ClassResponse.ClassData item1 = new ClassResponse.ClassData();
-                item1.className = getResources().getString(R.string.menu_staff_filter);
-                result.add(item1);
-            }
+//            if (role != null && role.equalsIgnoreCase("admin"))
+//            {
+//                ClassResponse.ClassData item1 = new ClassResponse.ClassData();
+//                item1.className = getResources().getString(R.string.menu_staff_filter);
+//                result.add(item1);
+//            }
 
             for (int i = 0; i < list.size(); i++) {
                 ClassListTBL currentItem = list.get(i);
@@ -195,12 +195,12 @@ public class TeacherClassListFragment extends BaseFragment implements LeafManage
 
         List<ClassResponse.ClassData> result1 = new ArrayList<>();
 
-        if (role != null && role.equalsIgnoreCase("admin"))
-        {
-            ClassResponse.ClassData item1 = new ClassResponse.ClassData();
-            item1.className = getResources().getString(R.string.menu_staff_filter);
-            result1.add(item1);
-        }
+//        if (role != null && role.equalsIgnoreCase("admin"))
+//        {
+//            ClassResponse.ClassData item1 = new ClassResponse.ClassData();
+//            item1.className = getResources().getString(R.string.menu_staff_filter);
+//            result1.add(item1);
+//        }
 
         result1.addAll(result);
 
@@ -355,14 +355,9 @@ public class TeacherClassListFragment extends BaseFragment implements LeafManage
                     @Override
                     public void onClick(View view) {
 
-                        if (getAdapterPosition() == 0)
-                        {
-                            startActivity(new Intent(getActivity(), StaffAttendanceActivity.class));
-                        }
-                        else
-                        {
+
                             onTreeClick(list.get(getAdapterPosition()));
-                        }
+
 
                     }
                 });

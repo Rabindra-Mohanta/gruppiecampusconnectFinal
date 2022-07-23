@@ -2380,6 +2380,11 @@ public class GroupDashboardActivityNew extends BaseActivity
             Intent intent=new Intent(this,ClassActivity.class);
             startActivity(intent);
         }
+        else if(group.type.equals("Staff Attendance"))
+        {
+            Intent intent=new Intent(this,StaffAttendanceActivity.class);
+            startActivity(intent);
+        }
 
         else if (group.type.equals("Video Class")) {
             Intent intent = new Intent(this, VideoClassActivity.class);

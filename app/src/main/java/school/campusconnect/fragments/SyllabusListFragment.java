@@ -332,14 +332,14 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
     public void onFailure(int apiId, String msg) {
         binding.progressBar.setVisibility(View.GONE);
         hideLoadingBar();
-        Toast.makeText(getContext(),msg,Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(),getResources().getString(R.string.toast_something_went_wrong),Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onException(int apiId, String msg) {
         binding.progressBar.setVisibility(View.GONE);
         hideLoadingBar();
-        Toast.makeText(getContext(),msg,Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(),getResources().getString(R.string.toast_something_went_wrong),Toast.LENGTH_SHORT).show();
     }
 
 
