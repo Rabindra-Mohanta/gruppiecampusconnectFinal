@@ -457,23 +457,10 @@ public class BaseFragment extends Fragment {
         editor.putString("Locale.Helper.Selected.Language", languageCode);
         Log.e("LocaleHelper","language "+languageCode);
         editor.apply();
-
         Intent intent = new Intent(getActivity(), LoginActivity2.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
-
-
-
-
-
-
-
-
-
-
-
-
     public void logoutForNewSchool() {
 
         if(getActivity()!=null)
@@ -516,9 +503,7 @@ public class BaseFragment extends Fragment {
             BoothPostEventTBL.deleteAll();
             GruppieContactGroupIdModel.deleteAll();
             GalleryTable.deleteGallery();
-
             new DatabaseHandler(getActivity()).deleteAll();
-
             HwItem.deleteAll();
             TestExamTBL.deleteAll();
             SubBoothWorkerEventTBL.deleteAll();
@@ -538,11 +523,7 @@ public class BaseFragment extends Fragment {
             MyTeamVotersTBL.deleteAll();
             BoothPresidentTBL.deleteAll();
             MyTeamSubBoothTBL.deleteAll();
-
-
             getActivity().getSharedPreferences("pref_noti_count", Context.MODE_PRIVATE).edit().clear().commit();
-
-
         }
 
     }
