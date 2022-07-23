@@ -320,6 +320,42 @@
     },
     {
       "client_info": {
+        "mobilesdk_app_id": "1:337951586049:android:67debf0469641f50340d00",
+        "android_client_info": {
+          "package_name": "gruppie.vidyabhooshan"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtTA_-PUIlF9Zi8Icw7TorZ474q55kgmo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337951586049-visma3ojvicnrm4sqal0khk8dg83ft4n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "337951586049-1l2r9tq2go05ssjv6rbll4brllotetgi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "school.gruppie"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:337951586049:android:8e68c9244c593ee0",
         "android_client_info": {
           "package_name": "gs_english.gruppie"
@@ -524,9 +560,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:337951586049:android:0cdf803f8e3e78b8340d00",
+        "mobilesdk_app_id": "1:337951586049:android:23e9343137872e1d340d00",
         "android_client_info": {
-          "package_name": "kreis.gruppie"
+          "package_name": "kreis.gruppie.app"
         }
       },
       "oauth_client": [

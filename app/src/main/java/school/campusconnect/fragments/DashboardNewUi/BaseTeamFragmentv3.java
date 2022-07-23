@@ -75,7 +75,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 
-import id.zelory.compressor.Compressor;
+
 import school.campusconnect.BuildConfig;
 import school.campusconnect.R;
 import school.campusconnect.activities.AddChapterPostActivity;
