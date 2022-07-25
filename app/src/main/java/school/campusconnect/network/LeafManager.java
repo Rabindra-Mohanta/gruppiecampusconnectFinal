@@ -7610,11 +7610,11 @@ public class LeafManager {
         }, ErrorResponse.class);
     }
 
-    public void editClassStudentPhone(OnCommunicationListener listener, String groupId, String userId, StudentRes.StudentData addStudentReq) {
+    public void editClassStudentPhone(OnCommunicationListener listener, String groupId, String userId,String teamId, StudentRes.StudentData addStudentReq) {
         mOnCommunicationListener = listener;
         LeafApiClient apiClient = LeafApplication.getInstance().getApiClient();
         LeafService service = apiClient.getService(LeafService.class);
-        final Call<BaseResponse> model = service.editClassStudentPhone(groupId, userId, addStudentReq);
+        final Call<BaseResponse> model = service.editClassStudentPhone(groupId, userId, teamId, addStudentReq);
         ResponseWrapper<BaseResponse> wrapper = new ResponseWrapper<>(model);
 
         wrapper.execute(API_UPDATE_PHONE_STUDENT, new ResponseWrapper.ResponseHandler<BaseResponse, ErrorResponse>() {

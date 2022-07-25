@@ -56,6 +56,7 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
     LeafManager manager;
     String teamId,subjectId,role;
     SyllabusAdapter adapter;
+    private boolean isFirstTimeFromDateNull,isFirstTimeToDateNull,isFirstTimeActFromDateNull,isFirstTimeActToDateNull=false;
     ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataList = new ArrayList<>();
 
     ArrayList<SyllabusListModelRes.SyllabusData> syllabusDataSpinnerList = new ArrayList<>();
@@ -286,16 +287,12 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
 
             case LeafManager.API_STATUS_PLAN:
                 binding.progressBar.setVisibility(View.GONE);
-                syllabusDataList.clear();
-                SyllabusTBL.deleteAll(teamId,subjectId);
-                adapter.add(syllabusDataList);
+
                 apiCall();
                 break;
 
             case LeafManager.API_CHANGE_STATUS_PLAN:
                 binding.progressBar.setVisibility(View.GONE);
-
-
 
                 apiCall();
                 break;
@@ -475,6 +472,7 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
 
             if (data.getToDate() != null && !data.getToDate().isEmpty())
             {
+
                 holder.binding.etToDate.setText(data.getToDate());
                 holder.binding.etToDate.setEnabled(false);
                 holder.binding.etToDate.setTextColor(getResources().getColor(R.color.grey));
@@ -487,6 +485,8 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
 
             if (data.getFromDate() != null && !data.getFromDate().isEmpty())
             {
+
+
                 holder.binding.etFromDate.setText(data.getFromDate());
                 holder.binding.etFromDate.setEnabled(false);
                 holder.binding.etFromDate.setTextColor(getResources().getColor(R.color.grey));
@@ -499,6 +499,9 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
 
             if (data.getActualStartDate() != null && !data.getActualStartDate().isEmpty())
             {
+
+
+
                 holder.binding.etActualFromDate.setText(data.getActualStartDate());
                 holder.binding.etActualFromDate.setEnabled(false);
                 holder.binding.etActualFromDate.setTextColor(getResources().getColor(R.color.grey));
@@ -511,6 +514,8 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
 
             if (data.getActualEndDate() != null && !data.getActualEndDate().isEmpty())
             {
+
+
                 holder.binding.etActualToDate.setText(data.getActualEndDate());
                 holder.binding.etActualToDate.setEnabled(false);
                 holder.binding.etActualToDate.setTextColor(getResources().getColor(R.color.grey));
@@ -560,7 +565,10 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
                         @Override
                         public void onDateSelected(Calendar c) {
                             SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+
+
                             holder.binding.etFromDate.setText(format.format(c.getTime()));
+
                         }
                     });
                     fragment.show(((AppCompatActivity) context).getSupportFragmentManager(), "datepicker");
@@ -578,6 +586,8 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
                         @Override
                         public void onDateSelected(Calendar c) {
                             SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+
+
                             holder.binding.etToDate.setText(format.format(c.getTime()));
                         }
                     });
@@ -596,6 +606,8 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
                         @Override
                         public void onDateSelected(Calendar c) {
                             SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+
+
                             holder.binding.etActualFromDate.setText(format.format(c.getTime()));
                         }
                     });
@@ -614,6 +626,15 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
                         @Override
                         public void onDateSelected(Calendar c) {
                             SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+                            if (holder.binding.etActualToDate.getText().toString().isEmpty())
+                            {
+                                isFirstTimeActToDateNull=true;
+                            }
+                            else
+                            {
+                                isFirstTimeActToDateNull=false;
+                            }
+
                             holder.binding.etActualToDate.setText(format.format(c.getTime()));
                         }
                     });
@@ -626,18 +647,59 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
                 @Override
                 public void onClick(View v) {
 
-                     if(holder.binding.btnDone.getText().toString().equals("Edit"))
+                    if (role != null && role.equalsIgnoreCase("teacher"))
+                    {
+
+                        if(!holder.binding.etActualFromDate.getText().toString().isEmpty() && !holder.binding.etActualToDate.getText().toString().isEmpty() )
+                        {
+                            changeStatusplan1(holder.binding.etFromDate.getText().toString(),holder.binding.etToDate.getText().toString(),holder.binding.etActualFromDate.getText().toString(),holder.binding.etActualToDate.getText().toString(),data.getTopicId());
+                        }
+                        else if(!holder.binding.etToDate.getText().toString().isEmpty() && !holder.binding.etFromDate.getText().toString().isEmpty() )
+                        {
+
+                            setSyllabusPlan(holder.binding.etToDate.getText().toString(),holder.binding.etFromDate.getText().toString(),data.getTopicId(),data.getTopicName(),chapterID);
+
+                        }
+                        else
+                        {
+                            Toast.makeText(getContext(),getResources().getString(R.string.toast_select_date),Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+
+                    else
+
+                    {
+
+
+                     if(holder.binding.btnDone.getText().toString().equals("Edit") && role.equals("admin"))
                      {
 
-                         holder.binding.etActualFromDate.setTextColor(getResources().getColor(R.color.white));
-                         holder.binding.etActualToDate.setTextColor(getResources().getColor(R.color.white));
-                         holder.binding.etFromDate.setTextColor(getResources().getColor(R.color.white));
-                         holder.binding.etToDate.setTextColor(getResources().getColor(R.color.white));
+                         if(data.getFromDate()==null && data.getToDate()==null)
+                         {
+                             holder.binding.etFromDate.setTextColor(getResources().getColor(R.color.white));
+                             holder.binding.etToDate.setTextColor(getResources().getColor(R.color.white));
+                             holder.binding.etFromDate.setEnabled(true);
+                             holder.binding.etToDate.setEnabled(true);
+                             holder.binding.etActualToDate.setEnabled(false);
+                             holder.binding.etActualFromDate.setEnabled(false);
 
-                         holder.binding.etActualFromDate.setEnabled(true);
-                         holder.binding.etActualToDate.setEnabled(true);
-                         holder.binding.etFromDate.setEnabled(true);
-                         holder.binding.etToDate.setEnabled(true);
+                         }
+
+                         else
+                         {
+                             holder.binding.etActualFromDate.setTextColor(getResources().getColor(R.color.white));
+                             holder.binding.etActualToDate.setTextColor(getResources().getColor(R.color.white));
+                             holder.binding.etFromDate.setTextColor(getResources().getColor(R.color.white));
+                             holder.binding.etToDate.setTextColor(getResources().getColor(R.color.white));
+
+                             holder.binding.etActualFromDate.setEnabled(true);
+                             holder.binding.etActualToDate.setEnabled(true);
+                             holder.binding.etFromDate.setEnabled(true);
+                             holder.binding.etToDate.setEnabled(true);
+
+                         }
+
 
                          holder.binding.btnDone.setText("Save");
 
@@ -646,16 +708,33 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
                      else
                      {
 
-                         changeStatusplan(holder.binding.etFromDate.getText().toString(),holder.binding.etToDate.getText().toString(),holder.binding.etActualFromDate.getText().toString(),holder.binding.etActualToDate.getText().toString(),data.getTopicId());
+                         if(data.getFromDate()==null && data.getToDate()==null)
+                         {
+                             setSyllabusPlan(holder.binding.etToDate.getText().toString(),holder.binding.etFromDate.getText().toString(),data.getTopicId(),data.getTopicName(),chapterID);
+                         }
+                         else
+
+                         {
+                             changeStatusplan(holder.binding.etFromDate.getText().toString(),holder.binding.etToDate.getText().toString(),holder.binding.etActualFromDate.getText().toString(),holder.binding.etActualToDate.getText().toString(),data.getTopicId());
+
+                         }
+
+
 
 
                      }
 
+                    }
+
                 }
+
+
             });
 
             if (role != null && (role.equalsIgnoreCase("parent") || (role.equalsIgnoreCase("teacher"))))
             {
+
+
                 holder.binding.etActualFromDate.setTextColor(getResources().getColor(R.color.grey));
                 holder.binding.etActualToDate.setTextColor(getResources().getColor(R.color.grey));
                 holder.binding.etFromDate.setTextColor(getResources().getColor(R.color.grey));
@@ -672,12 +751,32 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
 
             if (role != null && role.equalsIgnoreCase("teacher"))
             {
-                holder.binding.etFromDate.setEnabled(true);
-                holder.binding.etToDate.setEnabled(true);
-                holder.binding.etFromDate.setTextColor(getResources().getColor(R.color.white));
-                holder.binding.etToDate.setTextColor(getResources().getColor(R.color.white));
 
-                holder.binding.btnDone.setVisibility(View.VISIBLE);
+                  holder.binding.btnDone.setText(getResources().getString(R.string.action_save));
+                  if(holder.binding.etFromDate.getText().toString().isEmpty() && holder.binding.etToDate.getText().toString().isEmpty())
+                  {  holder.binding.btnDone.setVisibility(View.VISIBLE);
+                      holder.binding.etFromDate.setEnabled(true);
+                      holder.binding.etToDate.setEnabled(true);
+                      holder.binding.etFromDate.setTextColor(getResources().getColor(R.color.white));
+                      holder.binding.etToDate.setTextColor(getResources().getColor(R.color.white));
+
+                  }
+                  else if(holder.binding.etActualFromDate.getText().toString().isEmpty() && holder.binding.etActualFromDate.getText().toString().isEmpty())
+                  {  holder.binding.btnDone.setVisibility(View.VISIBLE);
+                      holder.binding.etActualFromDate.setEnabled(true);
+                      holder.binding.etActualToDate.setEnabled(true);
+                      holder.binding.etActualFromDate.setTextColor(getResources().getColor(R.color.white));
+                      holder.binding.etActualToDate.setTextColor(getResources().getColor(R.color.white));
+
+                  }
+                  else
+                  {
+                      holder.binding.btnDone.setVisibility(View.GONE);
+
+                  }
+
+
+
             }
         }
 
@@ -697,10 +796,12 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
             public ViewHolder(@NonNull ItemTopicDetailsBinding itemView) {
                 super(itemView.getRoot());
                 binding = itemView;
+                binding.btnDone.setVisibility(View.GONE);
 
                 if(role.equals("admin"))
                 {
                     binding.btnDone.setText("Edit");
+                    binding.btnDone.setVisibility(View.VISIBLE);
                 }
                 else
                 {
@@ -711,12 +812,51 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
         }
     }
 
+
+
+    private void setSyllabusPlan(String toDate, String Fromdate, String topicId, String topicName,String chapterID ) {
+
+        showLoadingBar(binding.progressBar);
+        ArrayList<SyllabusPlanRequest.TopicData> list = new ArrayList<>();
+        SyllabusPlanRequest request = new SyllabusPlanRequest();
+
+
+        SyllabusPlanRequest.TopicData topicData1 = new SyllabusPlanRequest.TopicData();
+
+
+
+            topicData1.setTopicId(topicId);
+            topicData1.setTopicName(topicName);
+            topicData1.setToDate(toDate);
+            topicData1.setFromDate(Fromdate);
+
+
+           list.add(topicData1);
+
+        request.setTopicData(list);
+        Log.e(TAG,"req is Not Update"+new Gson().toJson(request));
+
+        showLoadingBar(binding.progressBar);
+        manager.statusPlan(this,GroupDashboardActivityNew.groupId,teamId,subjectId,chapterID,request);
+
+
+
+
+
+    }
+
     private void changeStatusplan(String etFromDate,String etToDate,String etActualFromDate,String  etActualToDate , String topicId )
     {
 
 
 
         showLoadingBar(binding.progressBar);
+
+
+
+
+
+
 
         if(!etFromDate.isEmpty() &&  !etToDate.isEmpty() &&  !etActualToDate.isEmpty()  &&  !etActualFromDate.isEmpty())
 
@@ -741,7 +881,42 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
             req.setFromDate(etFromDate);
             Log.e("data","rabi1-"+new Gson().toJson(req));
             manager.changeStatusPlan(this,GroupDashboardActivityNew.groupId,teamId,subjectId,topicId, req);
+
+
         }
+
+        else
+        {
+            Toast.makeText(getContext(),getResources().getString(R.string.toast_select_date),Toast.LENGTH_LONG).show();
+        }
+
+
+        }
+
+
+
+
+
+
+    private void changeStatusplan1(String etFromDate,String etToDate,String etActualFromDate,String  etActualToDate , String topicId )
+    {
+
+
+
+        showLoadingBar(binding.progressBar);
+
+        if(!etActualFromDate.isEmpty() && !etActualToDate.isEmpty())
+        {
+        ChangeStatusPlanModel.ChangeStatusModelReq req = new ChangeStatusPlanModel.ChangeStatusModelReq();
+
+
+        req.setActualStartDate(etActualFromDate);
+        req.setActualEndDate(etActualToDate);
+        Log.e("data","rabi1-"+new Gson().toJson(req));
+        manager.changeStatusPlan(this,GroupDashboardActivityNew.groupId,teamId,subjectId,topicId, req);
+
+        }
+
         else
         {
             Toast.makeText(getContext(),getResources().getString(R.string.toast_select_date),Toast.LENGTH_LONG).show();
@@ -839,6 +1014,8 @@ public class SyllabusListFragment extends BaseFragment implements LeafManager.On
 
             showLoadingBar(binding.progressBar);
             manager.statusPlan(this,GroupDashboardActivityNew.groupId,teamId,subjectId,chapterID,request);
+
+
         }
 
     }

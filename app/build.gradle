@@ -36,23 +36,23 @@ android {
                         buildConfigField("String", "AppCategory", '"CAMPUS"')
                         buildConfigField("String", "APP_ID",  '"school"')*/
 
-                         applicationId "gruppie.gc2"
-                         versionCode 1
-                         versionName "1.1"
-                         resValue "string", "app_name", '"GC2"'
-                         buildConfigField("String", "AppName", '"GC2"')
-                         buildConfigField("String", "AppCategory", '"CAMPUS"')
-                         buildConfigField("String", "APP_ID",  '"school"')
+//                         applicationId "gruppie.gc2"
+//                         versionCode 1
+//                         versionName "1.1"
+//                         resValue "string", "app_name", '"GC2"'
+//                         buildConfigField("String", "AppName", '"GC2"')
+//                         buildConfigField("String", "AppCategory", '"CAMPUS"')
+//                         buildConfigField("String", "APP_ID",  '"school"')
 
 
                         // [COPY]
-                   /*     applicationId "school.campusconnect"
+                      applicationId "school.campusconnect"
                         versionCode 17
                         versionName "1.7"
                         resValue "string", "app_name", '"GC2"'
                         buildConfigField("String", "AppName", '"GC2"')
                         buildConfigField("String", "AppCategory", '"CAMPUS"')
-                        buildConfigField("String", "APP_ID",  '"school"')*/
+                        buildConfigField("String", "APP_ID",  '"school"')
 
                         // [ 1. Gruppie Campus ]
                   /*      applicationId "school.campusconnect"
@@ -277,7 +277,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
-            buildConfigField "String", "BASE_URL", '"https://gcc.gruppie.in/"' // SCHOOL APP
+           // buildConfigField "String", "BASE_URL", '"https://gcc.gruppie.in/"' // SCHOOL APP
             //   buildConfigField "String", "BASE_URL", '"https://gccc3.gruppie.in/"' // SUDHAKAR LAL
             //    buildConfigField "String", "BASE_URL", '"https://gccc2.gruppie.in"'//mahantesh
 
@@ -312,7 +312,7 @@ android {
          //   buildConfigField "String", "BASE_URL", '"https://gccc1.gruppie.in/"'   /// For Kittur MLA
         buildConfigField "String", "BASE_URL", '"https://api.gruppie.in"'   /// TEST SERVER...
      //    buildConfigField "String", "BASE_URL", '"https://prodv1.gruppie.in"'   /// PRODUCATION TEST SERVER...
-
+             //buildConfigField "String", "BASE_URL", '"https://gcc.gruppie.in/"' // SCHOOL APP
 
        //      buildConfigField "String", "BASE_URL", '"https://gcc1.gruppie.in"'
        //   buildConfigField "String", "BASE_URL", '"https://gcc3.gruppie.in"'

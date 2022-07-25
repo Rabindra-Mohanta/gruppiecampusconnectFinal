@@ -1239,7 +1239,7 @@ public interface LeafService {
     //copy
     @POST("/api/v1/groups/{group_id}/team/{team_id}/school/user/add")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<BaseResponse> addTeamStaffOrStudent1(@Path("group_id") String group_id, @Path("team_id") String team_id, @Query("userId") String userIds ,@Query("role") String role, @Query("teamId") String teamId);
+    Call<BaseResponse> addTeamStaffOrStudent1(@Path("group_id") String group_id, @Path("team_id") String team_id, @Query("userId") String userIds ,@Query("role") String role,@Query("teamId") String teamId);
 
 
     @PUT("/api/v1/groups/{group_id}/staff/{user_id}/edit")
@@ -1257,7 +1257,7 @@ public interface LeafService {
 
     @PUT("/api/v1/groups/{group_id}/student/{user_id}/phone/edit")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
-    Call<BaseResponse> editClassStudentPhone(@Path("group_id") String group_id, @Path("user_id") String user_id, @Body StudentRes.StudentData addStudentReq);
+    Call<BaseResponse> editClassStudentPhone(@Path("group_id") String group_id, @Path("user_id") String user_id,@Query("teamId") String teamId, @Body StudentRes.StudentData addStudentReq);
 
 
     @DELETE("/api/v1/groups/{group_id}/team/{team_id}/student/{user_id}/delete")
@@ -2040,6 +2040,8 @@ public interface LeafService {
     @POST("api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/syllabus/status")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> ChangeStatusPlan(@Path("group_id") String group_id, @Path("team_id") String team_id, @Path("subject_id") String subject_id, @Query("topicId") String topicId, @Body ChangeStatusPlanModel.ChangeStatusModelReq changeStatusModelReq);
+
+
 
     @POST("api/v1/groups/{group_id}/team/{team_id}/subject/{subject_id}/syllabus/plan")
     @Headers({"Content-Type: application/json", "Accept: application/json"})

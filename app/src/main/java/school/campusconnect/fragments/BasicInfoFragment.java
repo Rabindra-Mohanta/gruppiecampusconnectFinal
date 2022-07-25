@@ -252,7 +252,7 @@ public class BasicInfoFragment extends BaseFragment implements LeafManager.OnCom
                 addStudentReq.phone = addClassViewModel.studentDataMutableLiveData.getValue().getPhone();
 
                 //progressBar.setVisibility(View.VISIBLE);
-                leafManager.editClassStudentPhone(this, group_id, studentData.getUserId(), addStudentReq);
+                leafManager.editClassStudentPhone(this, group_id, studentData.getUserId(),team_id, addStudentReq);
 
             }
 

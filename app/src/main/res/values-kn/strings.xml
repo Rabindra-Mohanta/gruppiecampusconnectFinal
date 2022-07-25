@@ -1323,4 +1323,26 @@
     <string name="select_date">Select Date</string>
     <string name="toast_something_went_wrong">something went wrong try again</string>
 
+
+    <string name="hint_due_amount">Enter Due Amount</string>
+    <string name="hint_pay_amount">Enter Pay Amount</string>
+    <string name="hint_pay_date"> Pay Date</string>
+    <string name="hint_cheque_number">Enter Cheque Number</string>
+    <string name="hint_cheque_date"> Cheque Date</string>
+    <string name="hint_bank_name">Enter Bank Name</string>
+    <string name="hint_bank_branch">Enter Bank Branch</string>
+
+    <string name="lbl_due_amount">Due Amount : </string>
+    <string name="lbl_pay_amount">Pay Amount : </string>
+    <string name="lbl_pay_date">Pay Date : </string>
+    <string name="lbl_payment_mode">Payment Mode : </string>
+    <string name="lbl_cheque_number">Cheque Number : </string>
+    <string name="lbl_cheque_date">Cheque Date : </string>
+    <string name="lbl_bank_name">Bank Name : </string>
+    <string name="lbl_bank_branch">Bank Branch : </string>
+    <string name="lbl_select_accountant">Select Accountant</string>
+    <string name="lbl_select_examiner">Select Examiner</string>
+    <string name="add_examiner">Add Examiner</string>
+    <string name="toast_please_select_payment_mode">Please Select Payment Mode</string>
+
 </resources>
