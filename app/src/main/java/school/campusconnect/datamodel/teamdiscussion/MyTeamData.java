@@ -52,6 +52,7 @@ public class MyTeamData extends BaseResponse {
     public String role="";
     public Boolean accountant;
     public Boolean examiner;
+    public Boolean parentAllowedToPayFee;
     public int count;
     public String subCategory;
 

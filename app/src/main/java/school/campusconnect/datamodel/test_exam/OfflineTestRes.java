@@ -36,6 +36,9 @@ public class OfflineTestRes extends BaseResponse {
         @SerializedName("isActive")
         @Expose
         public boolean isActive;
+        @SerializedName("isApproved")
+        @Expose
+        public boolean isApproved;
         @SerializedName("insertedAt")
         @Expose
         public boolean insertedAt;

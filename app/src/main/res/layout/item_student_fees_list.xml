@@ -52,16 +52,25 @@
                         android:visibility="gone"
                         android:layout_marginRight="14dp"
                         android:paddingLeft="4dp" />
+                    <Button
+                        android:id="@+id/btnPay"
+                        style="@style/AddPostButton"
+                        android:layout_width="@dimen/padding_70dp"
+                        android:layout_height="@dimen/padding_30dp"
+                        android:gravity="center"
+                        android:paddingEnd="@dimen/padding_5dp"
+                        android:text="@string/lbl_pay"
+                        android:visibility="gone"/>
 
                     <ImageView
                         android:id="@+id/img_tree"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingEnd="16dp"
+                        android:layout_height="match_parent"
+                        android:padding="@dimen/padding_5dp"
                         android:src="@drawable/icon_right_arraw"
                         android:visibility="visible"
-                        android:tint="@color/colorTextDark"
-                        android:paddingRight="16dp" />
+                        app:tint="@color/colorTextDark"
+                        android:paddingRight="10dp" />
 
                 </LinearLayout>
 
@@ -139,7 +148,7 @@
                         android:paddingEnd="16dp"
                         android:src="@drawable/icon_right_arraw"
                         android:visibility="gone"
-                        android:tint="@color/colorTextDark"
+                        app:tint="@color/colorTextDark"
                         android:paddingRight="16dp" />
 
                 </RelativeLayout>

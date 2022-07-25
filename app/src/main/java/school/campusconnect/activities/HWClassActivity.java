@@ -78,7 +78,7 @@ public class HWClassActivity extends BaseActivity {
         role  = getIntent().getStringExtra("role");
         isExaminer=getIntent().getBooleanExtra("examiner",false);
         setTitle("");
-        if("admin".equalsIgnoreCase(role) &&  isExaminer==true )
+        if("admin".equalsIgnoreCase(role) &&  isExaminer)
         {
             apiCall(true);
         }
@@ -105,7 +105,7 @@ public class HWClassActivity extends BaseActivity {
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if("admin".equalsIgnoreCase(role) &&  isExaminer==true ){
+        if("admin".equalsIgnoreCase(role) &&  isExaminer ){
             getMenuInflater().inflate(R.menu.add_examiner,menu);
 
 

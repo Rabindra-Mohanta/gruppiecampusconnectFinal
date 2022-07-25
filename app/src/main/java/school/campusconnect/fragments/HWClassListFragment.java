@@ -86,6 +86,7 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
 
     String role;
     String type;
+    boolean isExaminer =false;
 
 
     @Override
@@ -141,6 +142,7 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
         type = getArguments().getString("type");
         Log.e(TAG,"type"+type);
         date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+        isExaminer=getArguments().getBoolean("examiner",false);
 
         staffID = LeafPreference.getInstance(getContext()).getString(LeafPreference.LOGIN_ID);
 
@@ -671,6 +673,7 @@ public class HWClassListFragment extends BaseFragment implements LeafManager.OnC
             intent.putExtra("userId",classData.userId);
             intent.putExtra("team_name",classData.getName());
             intent.putExtra("role",role);
+            intent.putExtra("examiner",isExaminer);
             startActivity(intent);
         }
 

@@ -189,6 +189,7 @@ public class BusStudentListFragment extends BaseFragment implements LeafManager.
 
         }
 
+
         public class ViewHolder extends RecyclerView.ViewHolder {
             @Bind(R.id.img_lead)
             ImageView imgTeam;
@@ -215,6 +216,7 @@ public class BusStudentListFragment extends BaseFragment implements LeafManager.
                 });
             }
         }
+
     }
 
     private void editStudent(BusStudentRes.StudentData studentData) {

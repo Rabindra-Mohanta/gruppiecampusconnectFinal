@@ -648,6 +648,11 @@ public interface LeafService {
     Call<SubjectStaffResponse> getSubjectStaffMore(@Path("group_id") String group_id, @Path("team_id") String team_id,
                                                    @Query("option") String option);
 
+    @GET("/api/v1/groups/{group_id}/team/{team_id}/subject/staff/get")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<SubjectStaffResponse> getSubjectStaffAssigned(@Path("group_id") String group_id, @Path("team_id") String team_id,
+                                                   @Query("option") String option);
+
     @GET("/api/v1/groups/{group_id}/team/{team_id}/year/timetable/get")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<TimeTableList2Response> getTTNew(@Path("group_id") String group_id, @Path("team_id") String team_id);
@@ -1884,6 +1889,15 @@ public interface LeafService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<TicketListResponse> getTicketWithoutRole(@Path("group_id") String group_id,@Query("option") String option,@Query("page") String page);
 */
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/offline/testexam/{teamexam_id}/not/approve")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> examinerNotApproved(@Path("group_id") String group_id,@Path("team_id") String team_id,@Path("teamexam_id") String teamexam_id);
+
+
+    @PUT("/api/v1/groups/{group_id}/team/{team_id}/offline/testexam/{teamexam_id}/approve")
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    Call<BaseResponse> examinerApproved(@Path("group_id") String group_id,@Path("team_id") String team_id,@Path("teamexam_id") String teamexam_id);
+
     @PUT("/api/v1/groups/{group_id}/issue/post/{issuePost_id}/approve")
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     Call<BaseResponse> ticketApproved(@Path("group_id") String group_id,@Path("issuePost_id") String issuePost_id,@Query("status") String status);
