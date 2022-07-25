@@ -2444,6 +2444,8 @@ public class GroupDashboardActivityNew extends BaseActivity
                     intent.putExtra("group_id", groupId);
                     intent.putExtra("team_id", group.details.teamId);
                     intent.putExtra("title", group.details.studentName);
+                    intent.putExtra("userId", group.details.userId);
+
 
                 } else {
                     intent = new Intent(this, HWClassActivity.class);
@@ -2453,6 +2455,7 @@ public class GroupDashboardActivityNew extends BaseActivity
 
             intent.putExtra("type", group.type);
             intent.putExtra("role", group.role);
+
             startActivity(intent);
         }
         else if (group.type.equals("Test")) {
@@ -2541,6 +2544,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                 intent.putExtra("title", group.name);
                 intent.putExtra("role", group.role);
                 intent.putExtra("accountant",group.accountant);
+                intent.putExtra("parentAllowedToPayFee", group.parentAllowedToPayFee);
 
 
 
@@ -2560,6 +2564,8 @@ public class GroupDashboardActivityNew extends BaseActivity
                         intent.putExtra("title", group.details.studentName);
                         intent.putExtra("team_id", group.details.teamId);
                         intent.putExtra("user_id", group.details.userId);
+                        intent.putExtra("parentAllowedToPayFee", group.parentAllowedToPayFee);
+                        intent.putExtra("role", group.role);
                     }
                     startActivity(intent);
 
@@ -2567,6 +2573,7 @@ public class GroupDashboardActivityNew extends BaseActivity
                     Intent intent = new Intent(this, FeesClassActivity.class);
                     intent.putExtra("title", group.name);
                     intent.putExtra("role", group.role);
+                    intent.putExtra("parentAllowedToPayFee", group.parentAllowedToPayFee);
                     startActivity(intent);
                 }
             }

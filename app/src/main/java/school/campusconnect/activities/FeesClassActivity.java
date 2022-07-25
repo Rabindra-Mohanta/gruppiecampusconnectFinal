@@ -66,6 +66,7 @@ public class FeesClassActivity extends BaseActivity implements LeafManager.OnCom
     private Menu menu;
     String selectedClassId="";
     private  Boolean isaccountant=false;
+    private  Boolean isParentAllowedToPayFee=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +81,7 @@ public class FeesClassActivity extends BaseActivity implements LeafManager.OnCom
 
         role  = getIntent().getStringExtra("role");
         isaccountant=getIntent().getBooleanExtra("accountant",false);
+        isParentAllowedToPayFee=getIntent().getBooleanExtra("parentAllowedToPayFee",false);
 
         if("admin".equalsIgnoreCase(role)){
             tabLayout.setVisibility(View.VISIBLE);

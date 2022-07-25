@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -49,6 +50,7 @@ import school.campusconnect.R;
 import school.campusconnect.activities.AddClassStudentActivity;
 import school.campusconnect.activities.FeesListActivity;
 import school.campusconnect.activities.GroupDashboardActivityNew;
+import school.campusconnect.activities.UpdateStudentFeePayActivity;
 import school.campusconnect.activities.UpdateStudentFeesActivity;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.classs.ClassResponse;
@@ -175,6 +177,12 @@ public class FeesListFragment extends BaseFragment implements LeafManager.OnComm
         public void onBindViewHolder(final ViewHolder holder, final int position) {
             final StudentFeesRes.StudentFees item = list.get(position);
 
+
+            if (accountant){
+                holder.btnPay.setVisibility(View.VISIBLE);
+            }else {
+                holder.btnPay.setVisibility(View.GONE);
+            }
             if (!TextUtils.isEmpty(item.getStudentImage())) {
                 Picasso.with(mContext).load(Constants.decodeUrlToBase64(item.getStudentImage())).resize(50, 50).networkPolicy(NetworkPolicy.OFFLINE).into(holder.imgTeam,
                         new Callback() {
@@ -210,6 +218,13 @@ public class FeesListFragment extends BaseFragment implements LeafManager.OnComm
             }
             holder.txt_name.setText(item.getStudentName());
             holder.txt_count.setText("Total Balance Amount : " + (TextUtils.isEmpty(item.getTotalBalanceAmount()) ? "0" : item.getTotalBalanceAmount()));
+
+            holder.btnPay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    payStudent(list.get(position));
+                }
+            });
         }
 
         @Override
@@ -245,6 +260,10 @@ public class FeesListFragment extends BaseFragment implements LeafManager.OnComm
             @Bind(R.id.img_Edit)
             ImageView img_Edit;
 
+            @Bind(R.id.btnPay)
+            Button btnPay;
+
+
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -269,6 +288,16 @@ public class FeesListFragment extends BaseFragment implements LeafManager.OnComm
         intent.putExtra("role", role);
         intent.putExtra("accountant", accountant);
         intent.putExtra("StudentFees", new Gson().toJson(studentData));
+        startActivity(intent);
+    }
+
+    private void payStudent(StudentFeesRes.StudentFees studentData){
+        Intent intent = new Intent(getActivity(), UpdateStudentFeePayActivity.class);
+        intent.putExtra("title",studentData.studentName + " - (" + className + ")");
+        intent.putExtra("groupId",mGroupId);
+        intent.putExtra("team_id",teamId);
+        intent.putExtra("user_id",user_id);
+        intent.putExtra("resData",new Gson().toJson(studentData));
         startActivity(intent);
     }
 

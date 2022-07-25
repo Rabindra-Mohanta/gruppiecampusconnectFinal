@@ -56,6 +56,7 @@ public class FeesClassListFragment extends BaseFragment implements LeafManager.O
 
     String role;
     boolean accountant=false;
+    boolean isParentAllowedToPayFee=false;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -65,6 +66,7 @@ public class FeesClassListFragment extends BaseFragment implements LeafManager.O
 
         role = getArguments().getString("role");
         accountant = getArguments().getBoolean("accountant",false);
+        isParentAllowedToPayFee = getArguments().getBoolean("parentAllowedToPayFee",false);
 
         getDataLocally();
 
@@ -310,6 +312,8 @@ public class FeesClassListFragment extends BaseFragment implements LeafManager.O
             intent.putExtra("groupId",GroupDashboardActivityNew.groupId);
             intent.putExtra("team_id",classData.getId());
             intent.putExtra("user_id",classData.userId);
+            intent.putExtra("parentAllowedToPayFee", isParentAllowedToPayFee);
+            intent.putExtra("role", role);
             startActivity(intent);
 
         }else {

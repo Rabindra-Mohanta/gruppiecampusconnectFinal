@@ -1,6 +1,7 @@
 package school.campusconnect.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -40,6 +41,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import school.campusconnect.R;
 import school.campusconnect.activities.GroupDashboardActivityNew;
+import school.campusconnect.activities.MarksCardActivity2;
 import school.campusconnect.datamodel.BaseResponse;
 import school.campusconnect.datamodel.classs.ClassResponse;
 import school.campusconnect.datamodel.markcard2.AddMarksReq;
@@ -88,7 +90,10 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
     String team_id;
     String role;
     String userId;
-    private OfflineTestRes.ScheduleTestData selectedTest;
+    OfflineTestRes.ScheduleTestData selectedTest;
+    MarksCardActivity2 marksCardActivity2;
+    public String selectedTestId;
+    public boolean isTestApprove = false;
 
     @Nullable
     @Override
@@ -115,6 +120,15 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (offLineTestList != null) {
                     selectedTest = offLineTestList.get(position);
+                    selectedTestId = offLineTestList.get(position).offlineTestExamId;
+                    isTestApprove =offLineTestList.get(position).isApproved;
+                    Log.d("TAG","===>offLineTestList"+offLineTestList);
+                    Log.d("TAG","===>isTestApprove"+isTestApprove);
+
+                    ((MarksCardActivity2) getActivity()).getSpinnerValue(isTestApprove);
+
+
+
                     getMarkCardList();
                 }
             }
@@ -130,6 +144,7 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
         LeafManager leafManager = new LeafManager();
         //showLoadingBar(progressBar);
         progressBar.setVisibility(View.VISIBLE);
+
         if ("admin".equalsIgnoreCase(role) || "teacher".equalsIgnoreCase(role)) {
             leafManager.getMarkCard2List(this, GroupDashboardActivityNew.groupId, team_id, selectedTest.offlineTestExamId);
         } else {
@@ -173,6 +188,7 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
                 }
                 ArrayAdapter<String> spSubAdapter = new ArrayAdapter<String>(getActivity(), R.layout.item_spinner, R.id.tvItem, strSubject);
                 spSubject.setAdapter(spSubAdapter);
+
                 break;
             }
             case LeafManager.API_MARK_CARD_LIST_2: {
@@ -550,5 +566,7 @@ public class MarkCardFragment2 extends BaseFragment implements LeafManager.OnCom
 
             }
         }
+
     }
+
 }

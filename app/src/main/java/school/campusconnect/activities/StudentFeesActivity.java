@@ -72,6 +72,8 @@ public class StudentFeesActivity extends BaseActivity {
     String team_id;
     String user_id;
     String groupId;
+    String role;
+    boolean isParentAllowedToPayFee = false;
     DueDateAdapter dueDateAdapter;
     PaidDateAdapter paidDateAdapter = new PaidDateAdapter();
 
@@ -90,6 +92,8 @@ public class StudentFeesActivity extends BaseActivity {
         groupId = getIntent().getStringExtra("groupId");
         team_id = getIntent().getStringExtra("team_id");
         user_id = getIntent().getStringExtra("user_id");
+        role = getIntent().getStringExtra("role");
+        isParentAllowedToPayFee=getIntent().getBooleanExtra("parentAllowedToPayFee",false);
         AppLog.e(TAG, "team_id : " + team_id);
         AppLog.e(TAG, "user_id : " + user_id);
 
@@ -111,6 +115,11 @@ public class StudentFeesActivity extends BaseActivity {
         dueDateAdapter = new DueDateAdapter();
         rvDueDates.setAdapter(dueDateAdapter);
         rvPaid.setAdapter(paidDateAdapter);
+        if (role.equals("parent") && !isParentAllowedToPayFee){
+            btnPay.setVisibility(View.GONE);
+        }else {
+            btnPay.setVisibility(View.VISIBLE);
+        }
 
         btnPay.setOnClickListener(new View.OnClickListener() {
             @Override
